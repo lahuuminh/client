@@ -1,15 +1,25 @@
 // localStorage.removeItem("orderList");
-let userList = localStorage.getItem("userList")
-  ? JSON.parse(localStorage.getItem("userList"))
+let host = 'http://localhost:8080';
+// let userList = localStorage.getItem('userList')
+//   ? JSON.parse(localStorage.getItem('userList'))
+//   : [];
+let userList;
+// fetch data user list
+
+async function fetchUser() {
+  const response = await fetch(host + '/user/all'); // Thay thế URL bằng URL thực tế của server bạn muốn lấy dữ liệu từ
+  userList = await response.json();
+  return userList;
+}
+fetchUser();
+let orderList = localStorage.getItem('orderList')
+  ? JSON.parse(localStorage.getItem('orderList'))
   : [];
-let orderList = localStorage.getItem("orderList")
-  ? JSON.parse(localStorage.getItem("orderList"))
+var productList = localStorage.getItem('productList')
+  ? JSON.parse(localStorage.getItem('productList'))
   : [];
-var productList = localStorage.getItem("productList")
-  ? JSON.parse(localStorage.getItem("productList"))
-  : [];
-var listTKSP = JSON.parse(localStorage.getItem("listTKSP"));
-let content = document.getElementById("mngContent");
+var listTKSP = JSON.parse(localStorage.getItem('listTKSP'));
+let content = document.getElementById('mngContent');
 // console.log(listTKSP);
 // let display_product = document.getElementsByClassName("display-product")[0];
 // let tkSanPham = document.getElementById("tkSanPham");
@@ -19,42 +29,43 @@ let content = document.getElementById("mngContent");
 // });
 
 window.onload = () => {
-  let hamburgerbtn = document.getElementById("hamburger-open");
-  hamburgerbtn.addEventListener("click", () => {
-    let leftMenu = document.getElementById("left-menu");
-    if (window.getComputedStyle(hamburgerbtn).display != "none") {
+  let hamburgerbtn = document.getElementById('hamburger-open');
+  hamburgerbtn.addEventListener('click', () => {
+    let leftMenu = document.getElementById('left-menu');
+    if (window.getComputedStyle(hamburgerbtn).display != 'none') {
       leftMenu.style.display =
-        window.getComputedStyle(leftMenu).display == "block" ? "none" : "block";
+        window.getComputedStyle(leftMenu).display == 'block' ? 'none' : 'block';
     }
   });
 
-  let tkDonHang = document.getElementById("tkDonHang");
-  tkDonHang.addEventListener("click", () => {
+  let tkDonHang = document.getElementById('tkDonHang');
+  tkDonHang.addEventListener('click', () => {
     displayOrderManagement(orderList);
   });
 
-  let qlTaiKhoan = document.getElementById("userManagement");
-  qlTaiKhoan.addEventListener("click", () => {
+  let qlTaiKhoan = document.getElementById('userManagement');
+  qlTaiKhoan.addEventListener('click', () => {
     displayUserManagement(userList);
   });
 
-  let QLSP = document.getElementById("QLSP");
-  QLSP.addEventListener("click", () => {
+  let QLSP = document.getElementById('QLSP');
+  QLSP.addEventListener('click', () => {
     displayQLSP(productList);
   });
-  let TKSP = document.getElementById("TKSP");
-  TKSP.addEventListener("click", () => {
-  if(listTKSP===null) listTKSP = [];
-  for(var i = 0;i<productList.length;i++) productList[i].count = 0;
-  for(var i = 0;i<productList.length;i++)
-  for(var j = 0;j<listTKSP.length;j++)
-  if(productList[i].name === listTKSP[j].name) productList[i].count+=listTKSP[j].amount; 
-  displayTKSP(productList);
+  let TKSP = document.getElementById('TKSP');
+  TKSP.addEventListener('click', () => {
+    if (listTKSP === null) listTKSP = [];
+    for (var i = 0; i < productList.length; i++) productList[i].count = 0;
+    for (var i = 0; i < productList.length; i++)
+      for (var j = 0; j < listTKSP.length; j++)
+        if (productList[i].name === listTKSP[j].name)
+          productList[i].count += listTKSP[j].amount;
+    displayTKSP(productList);
   });
 };
 
 function closeOrderManagement() {
-  content.style.display = "none";
+  content.style.display = 'none';
   location.reload();
 }
 function displayOrderManagement(orderList) {
@@ -69,8 +80,8 @@ function displayOrderManagement(orderList) {
     '<div class="Ngaygio">Ngày giờ</div>' +
     '<div class="Trangthai">Trạng thái</div>' +
     '<div class="HanhDong">Hành động</div>' +
-    "</li>" +
-    "</ul>" +
+    '</li>' +
+    '</ul>' +
     '<div class="searchBar">' +
     '<form action="" id="dateSearch" class="dateSearch">' +
     '<label for="fromDate">Từ cuối ngày</label>' +
@@ -78,29 +89,29 @@ function displayOrderManagement(orderList) {
     '<label for="toDate">Đến cuối ngày</label>' +
     '<input type="date" name="ngayXaNhat" id="toDate">' +
     '<button class="applySearch" id="dateSearchBtn">Search</button>' +
-    "</form>" +
+    '</form>' +
     '<form action="" id="otherSearch" class="otherSearch">' +
     '<select name="searchyype" id="searchType">' +
     '<option value="1">Tìm theo mã đơn</option>' +
     '<option value="2">Tìm theo tên khách hàng</option>' +
     '<option value="3">Tim theo trạng thái</option>' +
-    "</select>" +
+    '</select>' +
     '<input type="text" id="inputValue">' +
     '<button class="applySearch" id="typeSearchBtn">Search</button>' +
-    "</form>" +
-    "</div>" +
-    "</div>";
-  let searchBtn = document.getElementsByClassName("applySearch");
-  let orderElm = document.getElementById("dsDonHang");
+    '</form>' +
+    '</div>' +
+    '</div>';
+  let searchBtn = document.getElementsByClassName('applySearch');
+  let orderElm = document.getElementById('dsDonHang');
   loadOrderList(orderElm, orderList);
   for (let i = 0; i < searchBtn.length; ++i) {
-    searchBtn[i].addEventListener("click", (e) => {
+    searchBtn[i].addEventListener('click', (e) => {
       e.preventDefault();
       let list = [];
-      if (i === 0) list = conditionSearch("Date");
-      if (i === 1) list = conditionSearch("Value");
+      if (i === 0) list = conditionSearch('Date');
+      if (i === 1) list = conditionSearch('Value');
       if (list.length == 0)
-        loadOrderList(orderElm, JSON.parse(localStorage.getItem("orderList")));
+        loadOrderList(orderElm, JSON.parse(localStorage.getItem('orderList')));
       else loadOrderList(orderElm, list);
     });
   }
@@ -113,59 +124,59 @@ function loadOrderList(orderElm, orderList) {
   }
   console.log(orderChild);
   for (let i = 0; i < orderList.length; ++i) {
-    let li = document.createElement("li");
-    li.setAttribute("class", "donHang");
+    let li = document.createElement('li');
+    li.setAttribute('class', 'donHang');
     li.innerHTML =
       '<div class="STT">' +
       i +
-      "</div>" +
+      '</div>' +
       '<div class="MaDon">' +
       orderList[i].maDon +
-      "</div>" +
+      '</div>' +
       '<div class="Khach">' +
       orderList[i].khachHang +
-      "</div>" +
+      '</div>' +
       '<div class="SanPham">' +
       orderList[i].sanPham +
-      "</div>" +
+      '</div>' +
       '<div class="TongTien">' +
       orderList[i].tongTien +
-      "</div>" +
+      '</div>' +
       '<div class="Ngaygio">' +
       orderList[i].ngayLap +
-      "</div>" +
+      '</div>' +
       '<div class="Trangthai">' +
       orderList[i].trangThai +
-      "</div>" +
+      '</div>' +
       '<div class="HanhDong">' +
       '<div class="accept">Y</div>' +
       '<div class="deny">X</div>' +
-      "</div>";
+      '</div>';
     orderElm.appendChild(li);
-    let accept = li.getElementsByClassName("accept")[0];
-    let deny = li.getElementsByClassName("deny")[0];
-    let status = li.getElementsByClassName("Trangthai")[0];
+    let accept = li.getElementsByClassName('accept')[0];
+    let deny = li.getElementsByClassName('deny')[0];
+    let status = li.getElementsByClassName('Trangthai')[0];
 
-    accept.addEventListener("click", () => {
-      if (status.innerHTML.localeCompare("Da Giao Hang") === 0) return;
-      if (status.innerHTML.localeCompare("Da Huy") === 0)
-        return alert("khong the giao don hang da huy");
-      let ans = confirm("Bạn chắc chắn muốn giao hàng ?");
+    accept.addEventListener('click', () => {
+      if (status.innerHTML.localeCompare('Da Giao Hang') === 0) return;
+      if (status.innerHTML.localeCompare('Da Huy') === 0)
+        return alert('khong the giao don hang da huy');
+      let ans = confirm('Bạn chắc chắn muốn giao hàng ?');
       if (ans == 1) {
-        console.log("dcm");
-        status.innerHTML = "Da Giao Hang";
-        setOrderStatus(orderList[i].maDon, "Da Giao Hang");
+        console.log('dcm');
+        status.innerHTML = 'Da Giao Hang';
+        setOrderStatus(orderList[i].maDon, 'Da Giao Hang');
       }
     });
 
-    deny.addEventListener("click", () => {
-      if (status.innerHTML.localeCompare("Da Huy") === 0) return;
-      if (status.innerHTML.localeCompare("Da Giao Hang") === 0)
-        return alert("Khong the huy don hang da giao");
-      let ans = confirm("Bạn chắc chắn muốn hủy,thao tác không thể hoàn tác!?");
+    deny.addEventListener('click', () => {
+      if (status.innerHTML.localeCompare('Da Huy') === 0) return;
+      if (status.innerHTML.localeCompare('Da Giao Hang') === 0)
+        return alert('Khong the huy don hang da giao');
+      let ans = confirm('Bạn chắc chắn muốn hủy,thao tác không thể hoàn tác!?');
       if (ans == 1) {
-        status.innerHTML = "Da Huy";
-        setOrderStatus(orderList[i].maDon, "Da Huy");
+        status.innerHTML = 'Da Huy';
+        setOrderStatus(orderList[i].maDon, 'Da Huy');
       }
     });
   }
@@ -174,14 +185,14 @@ function loadOrderList(orderElm, orderList) {
 function setOrderStatus(Ma, status) {
   let res = orderList.find((item) => item.maDon == Ma);
   if (res) res.trangThai = status;
-  localStorage.setItem("orderList", JSON.stringify(orderList));
+  localStorage.setItem('orderList', JSON.stringify(orderList));
 }
 
 function conditionSearch(condition) {
   let searchOrderList = [];
-  if (condition.localeCompare("Date") == 0) {
-    let fromDateInput = document.getElementById("fromDate").valueAsDate;
-    let toDateInput = document.getElementById("toDate").valueAsDate;
+  if (condition.localeCompare('Date') == 0) {
+    let fromDateInput = document.getElementById('fromDate').valueAsDate;
+    let toDateInput = document.getElementById('toDate').valueAsDate;
     console.log(fromDateInput);
     console.log(toDateInput);
     Array.from(orderList).forEach((element) => {
@@ -189,23 +200,23 @@ function conditionSearch(condition) {
       if (d >= fromDateInput && d <= toDateInput) searchOrderList.push(element);
     });
   }
-  if (condition.localeCompare("Value") == 0) {
-    let Opt = document.getElementById("searchType");
-    let inputVal = document.getElementById("inputValue").value;
+  if (condition.localeCompare('Value') == 0) {
+    let Opt = document.getElementById('searchType');
+    let inputVal = document.getElementById('inputValue').value;
     let value = Opt.value;
     console.log(inputVal);
     switch (value) {
-      case "1":
+      case '1':
         Array.from(orderList).forEach((element) => {
           if (element.maDon == inputVal) searchOrderList.push(element);
         });
         break;
-      case "2":
+      case '2':
         Array.from(orderList).forEach((element) => {
           if (element.khachHang == inputVal) searchOrderList.push(element);
         });
         break;
-      case "3":
+      case '3':
         Array.from(orderList).forEach((element) => {
           if (element.trangThai == inputVal) searchOrderList.push(element);
         });
@@ -214,20 +225,20 @@ function conditionSearch(condition) {
         break;
     }
   }
-  if (condition.localeCompare("User") == 0) {
-    let userSearchType = document.getElementById("userSearchType").value;
-    let inputVal = document.getElementById("userSearchValue").value;
+  if (condition.localeCompare('User') == 0) {
+    let userSearchType = document.getElementById('userSearchType').value;
+    let inputVal = document.getElementById('userSearchValue').value;
     userList.forEach((user) => {
       switch (userSearchType) {
-        case "1":
+        case '1':
           if (user.accountName.localeCompare(inputVal) == 0)
             searchOrderList.push(user);
           break;
-        case "2":
+        case '2':
           if (user.userName.localeCompare(inputVal) == 0)
             searchOrderList.push(user);
           break;
-        case "3":
+        case '3':
           if (user.email.localStorage(inputVal) == 0)
             searchOrderList.push(user);
           break;
@@ -238,54 +249,54 @@ function conditionSearch(condition) {
   }
   return searchOrderList;
 }
-
+// DO DU LIEU CUA NGUOI DUNG
 function displayUserManagement(userList) {
   content.innerHTML =
     '<ul class="userList">' +
     '<li class="user">' +
     '<div class="STT">STT' +
-    "</div>" +
+    '</div>' +
     '<div class="HoTen">Họ tên</div>' +
     '<div class="Email">Email</div>' +
     '<div class="TenDangNhap">Tên đăng nhập</div>' +
     '<div class="matKhau">Mật khẩu</div>' +
     '<div class="hanhDong">Hành động</div>' +
-    "</li>" +
-    "</ul>" +
+    '</li>' +
+    '</ul>' +
     '<div class="searchBar flex-start"' +
     '<form action="" id="userSearch">' +
     '<select name="userSeach" id="userSearchType">' +
     '<option value="1">Tìm theo tên đăng nhập</option>' +
     '<option value="2">Tìm theo họ tên</option>' +
     '<option value="3">Tìm theo email</option>' +
-    "</select>" +
+    '</select>' +
     '<input type="text" placeholder="Tìm kiếm thông tin..." id="userSearchValue">' +
-    "</form>" +
+    '</form>' +
     '<label class="addAccount">' +
     '<div class="addUsrBtn">+</div>' +
     '<div id="addUsrTitle">Tạo Tài Khoản</div>' +
-    "</label>" +
-    "</div>";
+    '</label>' +
+    '</div>';
 
-  let userElm = document.getElementsByClassName("userList")[0];
-  let searchBar = document.getElementById("userSearchValue");
-  let addUserBtn = document.getElementsByClassName("addAccount")[0];
+  let userElm = document.getElementsByClassName('userList')[0];
+  let searchBar = document.getElementById('userSearchValue');
+  let addUserBtn = document.getElementsByClassName('addAccount')[0];
 
-  searchBar.addEventListener("keypress", (e) => {
-    if (e.key != "Enter") return;
+  searchBar.addEventListener('keypress', (e) => {
+    if (e.key != 'Enter') return;
     let list = [];
-    list = conditionSearch("User");
-    if (list.length == 0) {
-      loadUserList(userElm, JSON.parse(localStorage.getItem("userList")));
-      return;
-    }
+    list = conditionSearch('User');
+    // if (list.length == 0) {
+    //   loadUserList(userElm, JSON.parse(localStorage.getItem('userList')));
+    //   return;
+    // }
     loadUserList(userElm, list);
   });
 
-  addUserBtn.addEventListener("click", () => {
-    if (document.getElementById("createAccountBox") != null) return;
-    let form = document.createElement("form");
-    form.setAttribute("id", "createAccountBox");
+  addUserBtn.addEventListener('click', () => {
+    if (document.getElementById('createAccountBox') != null) return;
+    let form = document.createElement('form');
+    form.setAttribute('id', 'createAccountBox');
     form.innerHTML =
       '<div class="closeBtn">X</div>' +
       '<label for="name">Ho ten</label>' +
@@ -293,11 +304,11 @@ function displayUserManagement(userList) {
       '<input type="text" id="name" placeholder="Ho va ten">' +
       '<label for="loginName">Ten dang nhap</label>' +
       '<label for="loginName" id="loginNameErr" style="color:red">Ten dang nhap khong toi da 8 ky tu va khong chua ky' +
-      "tu dac biet</label>" +
+      'tu dac biet</label>' +
       '<input type="text" id="loginName" placeholder="Ten dang nhap">' +
       '<label for="loginPassword">Mat Khau</label>' +
       '<label for="loginPassword" id="loginPasswordErr" style="color:red">Mat khau toi da 8 ky tu khong chua ky tu dac' +
-      "biet</label>" +
+      'biet</label>' +
       '<input type="password" id="loginPassword" placeholder="mat khau">' +
       '<label for="email">Email</label>' +
       '<label for="email" id="emailErr" style="color:red">Email phai tuan thu abc@email.com</label>' +
@@ -305,7 +316,7 @@ function displayUserManagement(userList) {
       '<div class="btnWrapper">' +
       '<button type="submit" class="submitBtn">Submit</button>' +
       '<button type="reset" >reset</button>' +
-      "</div>";
+      '</div>';
     content.appendChild(form);
     createAccountFunc();
     addCloseBehavior(content, form);
@@ -320,73 +331,120 @@ function loadUserList(userElm, userList) {
     if (index != 0) child.parentNode.removeChild(child);
   });
   userList.forEach((user, index) => {
-    let li = document.createElement("li");
-    li.setAttribute("class", "user");
+    let li = document.createElement('li');
+    li.setAttribute('class', 'user');
     li.innerHTML =
       '<div class="STT">' +
-      index +
-      "</div>" +
+      user.user_id +
+      '</div>' +
       '<div class="HoTen">' +
-      user.userName +
-      "</div>" +
+      user.username +
+      '</div>' +
       '<div class="Email">' +
       user.email +
-      "</div>" +
+      '</div>' +
       '<div class="TenDangNhap">' +
-      user.accountName +
-      "</div>" +
+      user.accountname +
+      '</div>' +
       '<div class="matKhau">' +
       user.password +
-      "</div>" +
+      '</div>' +
       '<div class="hanhDong">' +
       '<div class="delete">X</div>' +
-      "</div>";
+      '<div class="update">Sửa</div>';
+    ('</div>');
     userElm.appendChild(li);
-    li.getElementsByClassName("delete")[0].addEventListener("click", () => {
-      let ans = confirm(
-        "Ban chac chan muon xoa tai khoan nay? Viec xoa tai khoan se xoa toan bo thong tin ve don hang va thong tin khach hang?"
-      );
-      if (ans == 1) {
-        userList.splice(index, 1);
-        displayUserManagement(userList);
-        localStorage.setItem("userList", JSON.stringify(userList));
+    li.getElementsByClassName('delete')[0].addEventListener(
+      'click',
+      async () => {
+        let ans = confirm(
+          'Ban chac chan muon xoa tai khoan nay? Viec xoa tai khoan se xoa toan bo thong tin ve don hang va thong tin khach hang?'
+        );
+        if (ans == 1) {
+          console.log(user.user_id);
+          let response = await fetch(host + '/user/' + user.user_id, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json', // Adjust content type if needed
+              // Add any other headers if needed
+            },
+          });
+          if (response.ok) {
+            let data = await response.json();
+            let list = await fetchUser();
+            displayUserManagement(list);
+          }
+        }
       }
+    );
+    li.getElementsByClassName('update')[0].addEventListener('click', () => {
+      if (document.getElementById('createAccountBox') != null) return;
+      let form = document.createElement('form');
+      form.setAttribute('id', 'createAccountBox');
+      form.innerHTML =
+        '<div class="closeBtn">X</div>' +
+        '<label for="name">Ho ten</label>' +
+        '<label for="name" id="nameErr" style="color:red">Ho ten khong chua ky tu dac biet va toi da 128 ky tu</label>' +
+        '<input type="text" id="name">' +
+        '<label for="loginName">Ten dang nhap</label>' +
+        '<label for="loginName" id="loginNameErr" style="color:red">Ten dang nhap khong toi da 8 ky tu va khong chua ky' +
+        'tu dac biet</label>' +
+        '<input type="text" id="loginName">' +
+        '<label for="loginPassword">Mat Khau</label>' +
+        '<label for="loginPassword" id="loginPasswordErr" style="color:red">Mat khau toi da 8 ky tu khong chua ky tu dac' +
+        'biet</label>' +
+        '<input type="text" id="loginPassword">' +
+        '<label for="email">Email</label>' +
+        '<label for="email" id="emailErr" style="color:red">Email phai tuan thu abc@email.com</label>' +
+        '<input type="email" id="email" value={user.email}>' +
+        '<div class="btnWrapper">' +
+        '<button type="submit" class="submitBtn">Update</button>' +
+        '<button type="reset" >reset</button>' +
+        '</div>';
+      content.appendChild(form);
+      document.getElementById('name').value = user.username;
+      document.getElementById('loginName').value = user.accountname;
+      document.getElementById('loginPassword').value = user.password;
+      document.getElementById('email').value = user.email;
+      updateAccount(user.user_id);
+      addCloseBehavior(content, form);
     });
     console.log(li);
   });
 }
+// fetch post api user
 
-function createAccountFunc() {
-  let createAccountForm = document.getElementById("createAccountBox");
+function updateAccount(type) {
+  let createAccountForm = document.getElementById('createAccountBox');
 
-  let name = document.getElementById("name");
-  let loginName = document.getElementById("loginName");
-  let loginPass = document.getElementById("loginPassword");
-  let email = document.getElementById("email");
+  let name = document.getElementById('name');
+  let loginName = document.getElementById('loginName');
+  let loginPass = document.getElementById('loginPassword');
+  let email = document.getElementById('email');
 
   const nameReg = /[a-zA-Z]{3,}$/;
   const loginNameReg = /[a-zA-Z0-9]{1,128}$/;
   const loginPassReg = /[a-zA-Z0-9]{8,}$/;
   const emailReg = /([a-z]|[A-Z]|[0-9]){1,64}@([a-z]|[A-Z]|[0-9]|.){1,255}$/;
 
-  let nameErr = document.getElementById("nameErr");
-  let loginNameErr = document.getElementById("loginNameErr");
-  let loginPassErr = document.getElementById("loginPasswordErr");
-  let emailErr = document.getElementById("emailErr");
-  nameErr.style.display = "none";
-  loginNameErr.style.display = "none";
-  loginPassErr.style.display = "none";
-  emailErr.style.display = "none";
-  createAccountForm.addEventListener("submit", (e) => {
-    nameErr.style.display = "none";
-    loginNameErr.style.display = "none";
-    loginPassErr.style.display = "none";
-    emailErr.style.display = "none";
+  let nameErr = document.getElementById('nameErr');
+  let loginNameErr = document.getElementById('loginNameErr');
+  let loginPassErr = document.getElementById('loginPasswordErr');
+  let emailErr = document.getElementById('emailErr');
+  nameErr.style.display = 'none';
+  loginNameErr.style.display = 'none';
+  loginPassErr.style.display = 'none';
+  emailErr.style.display = 'none';
+  createAccountForm.addEventListener('submit', (e) => {
+    nameErr.style.display = 'none';
+    loginNameErr.style.display = 'none';
+    loginPassErr.style.display = 'none';
+    emailErr.style.display = 'none';
 
-    name.style.borderColor = "black";
-    loginName.style.borderColor = "black";
-    loginPass.style.borderColor = "black";
-    email.style.borderColor = "black";
+    name.style.borderColor = 'black';
+    loginName.style.borderColor = 'black';
+    loginPass.style.borderColor = 'black';
+    email.style.borderColor = 'black';
 
     e.preventDefault();
 
@@ -396,23 +454,23 @@ function createAccountFunc() {
     let emailVal = email.value;
 
     if (!emailReg.test(emailVal)) {
-      emailErr.style.display = "block";
-      email.style.borderColor = "red";
+      emailErr.style.display = 'block';
+      email.style.borderColor = 'red';
       email.focus();
     }
     if (!loginPassReg.test(loginPassVal)) {
-      loginPassErr.style.display = "block";
-      loginPass.style.borderColor = "red";
+      loginPassErr.style.display = 'block';
+      loginPass.style.borderColor = 'red';
       loginPass.focus();
     }
     if (!loginNameReg.test(loginNameVal)) {
-      loginNameErr.style.display = "block";
-      loginName.style.borderColor = "red";
+      loginNameErr.style.display = 'block';
+      loginName.style.borderColor = 'red';
       loginName.focus();
     }
     if (!nameReg.test(nameVal)) {
-      nameErr.style.display = "block";
-      name.style.borderColor = "red";
+      nameErr.style.display = 'block';
+      name.style.borderColor = 'red';
       name.focus();
     }
     if (
@@ -421,29 +479,183 @@ function createAccountFunc() {
       loginPassReg.test(loginPassVal) &&
       emailReg.test(emailVal)
     ) {
-      alert("Tao tai khoan thanh cong");
-      var newUser = {
-        userName: nameVal,
-        accountName: loginNameVal,
+      let newuser = {
+        username: nameVal,
+        accountname: loginNameVal,
         password: loginPassVal,
         email: emailVal,
-        phoneNumber: "none",
-        address: "none",
-        status: false, // trạng thái đăng nhập
+        phoneNumber: '',
+        address: '',
+        status: 'active', // trạng thái đăng nhập
+        role: 'nguoimua',
+        user_id: type,
       };
-      userList.push(newUser);
-      localStorage.setItem("userList", JSON.stringify(userList));
-      displayUserManagement(userList);
-      console.table(userList);
+
+      console.log(newuser);
+      let requestOptions = {
+        method: 'PUT', // hoặc 'PATCH' nếu server hỗ trợ
+        headers: {
+          'Content-Type': 'application/json',
+          // Thêm các header khác nếu cần thiết
+        },
+        body: JSON.stringify(newuser), // Chuyển đổi object thành chuỗi JSON để gửi đi
+      };
+      fetch(host + '/user', requestOptions)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          // Xử lý phản hồi nếu cần thiết
+          console.log('Update successful!');
+          return response.json();
+        })
+        .then((data) => {
+          console.log('Dữ liệu được trả về từ server:', data);
+          fetchUser()
+            .then(() => {
+              displayUserManagement(userList);
+            })
+            .catch(() => {
+              console.log(e);
+            });
+        })
+        .catch((error) => {
+          console.error(
+            'There was a problem with your fetch operation:',
+            error
+          );
+        });
+
+      // var newUser = {
+      //   userName: nameVal,
+      //   accountName: loginNameVal,
+      //   password: loginPassVal,
+      //   email: emailVal,
+      //   phoneNumber: 'none',
+      //   address: 'none',
+      //   status: false, // trạng thái đăng nhập
+      // };
+      // localStorage.setItem('userList', JSON.stringify(userList));
+    }
+    return false;
+  });
+}
+function createAccountFunc() {
+  let createAccountForm = document.getElementById('createAccountBox');
+
+  let name = document.getElementById('name');
+  let loginName = document.getElementById('loginName');
+  let loginPass = document.getElementById('loginPassword');
+  let email = document.getElementById('email');
+
+  const nameReg = /[a-zA-Z]{3,}$/;
+  const loginNameReg = /[a-zA-Z0-9]{1,128}$/;
+  const loginPassReg = /[a-zA-Z0-9]{8,}$/;
+  const emailReg = /([a-z]|[A-Z]|[0-9]){1,64}@([a-z]|[A-Z]|[0-9]|.){1,255}$/;
+
+  let nameErr = document.getElementById('nameErr');
+  let loginNameErr = document.getElementById('loginNameErr');
+  let loginPassErr = document.getElementById('loginPasswordErr');
+  let emailErr = document.getElementById('emailErr');
+  nameErr.style.display = 'none';
+  loginNameErr.style.display = 'none';
+  loginPassErr.style.display = 'none';
+  emailErr.style.display = 'none';
+  createAccountForm.addEventListener('submit', async (e) => {
+    nameErr.style.display = 'none';
+    loginNameErr.style.display = 'none';
+    loginPassErr.style.display = 'none';
+    emailErr.style.display = 'none';
+
+    name.style.borderColor = 'black';
+    loginName.style.borderColor = 'black';
+    loginPass.style.borderColor = 'black';
+    email.style.borderColor = 'black';
+
+    e.preventDefault();
+
+    let nameVal = name.value;
+    let loginNameVal = loginName.value;
+    let loginPassVal = loginPass.value;
+    let emailVal = email.value;
+
+    if (!emailReg.test(emailVal)) {
+      emailErr.style.display = 'block';
+      email.style.borderColor = 'red';
+      email.focus();
+    }
+    if (!loginPassReg.test(loginPassVal)) {
+      loginPassErr.style.display = 'block';
+      loginPass.style.borderColor = 'red';
+      loginPass.focus();
+    }
+    if (!loginNameReg.test(loginNameVal)) {
+      loginNameErr.style.display = 'block';
+      loginName.style.borderColor = 'red';
+      loginName.focus();
+    }
+    if (!nameReg.test(nameVal)) {
+      nameErr.style.display = 'block';
+      name.style.borderColor = 'red';
+      name.focus();
+    }
+    if (
+      nameReg.test(nameVal) &&
+      loginNameReg.test(loginNameVal) &&
+      loginPassReg.test(loginPassVal) &&
+      emailReg.test(emailVal)
+    ) {
+      let newuser = {
+        username: nameVal,
+        accountname: loginNameVal,
+        password: loginPassVal,
+        email: emailVal,
+        phoneNumber: '',
+        address: '',
+        status: '', // trạng thái đăng nhập
+      };
+      // Sử dụng hàm postData
+      try {
+        let response = await fetch(host + '/user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Adjust content type if needed
+          },
+          body: JSON.stringify(newuser),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Lỗi mạng hoặc lỗi HTTP, mã lỗi: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+        await fetchUser();
+        displayUserManagement(userList);
+        return responseData; // Return the response data
+      } catch (error) {
+        console.error('Xảy ra lỗi khi gửi yêu cầu:', error);
+        throw error; // Re-throw the error for further handling (optional)
+      }
+
+      // var newUser = {
+      //   userName: nameVal,
+      //   accountName: loginNameVal,
+      //   password: loginPassVal,
+      //   email: emailVal,
+      //   phoneNumber: 'none',
+      //   address: 'none',
+      //   status: false, // trạng thái đăng nhập
+      // };
+      // localStorage.setItem('userList', JSON.stringify(userList));
     }
     return false;
   });
 }
 
 function addCloseBehavior(content, form) {
-  let closeBtn = form.getElementsByClassName("closeBtn")[0];
-  closeBtn.addEventListener("click", () => {
-    form.style.animation = "show-out 400ms ease";
+  let closeBtn = form.getElementsByClassName('closeBtn')[0];
+  closeBtn.addEventListener('click', () => {
+    form.style.animation = 'show-out 400ms ease';
     setTimeout(() => {
       content.removeChild(form);
     }, 390);
@@ -456,9 +668,9 @@ var productListHai = productList;
 function searchQLSP() {
   console.log(productList);
   var input1 = document
-    .getElementById("input-searchByName-QLSP")
+    .getElementById('input-searchByName-QLSP')
     .value.toLowerCase();
-  var input2 = document.getElementById("search-type-QPSP").value;
+  var input2 = document.getElementById('search-type-QPSP').value;
   productListHai = [];
   if (input2 == 0) {
     for (var i = 0; i < productList.length; i++)
@@ -472,11 +684,11 @@ function searchQLSP() {
       )
         productListHai.push(productList[i]);
   }
-  displayQLSP(productListHai)
+  displayQLSP(productListHai);
 }
 
 function deleteQLSP(id) {
-  var DLconfirm = confirm("Bạn chắc không");
+  var DLconfirm = confirm('Bạn chắc không');
   var after = [];
   if (DLconfirm == 1) {
     for (var i = 0; i < productList.length; i++)
@@ -492,8 +704,8 @@ function deleteQLSP(id) {
 }
 
 function closeEditQLSP() {
-  var close = document.getElementById("formEditQLSP");
-  if (close) close.style.display = "none";
+  var close = document.getElementById('formEditQLSP');
+  if (close) close.style.display = 'none';
 }
 
 const blobToBase64 = (blob) => {
@@ -506,15 +718,15 @@ const blobToBase64 = (blob) => {
   });
 };
 const resize = (datas, wantedWidth, wantedHeight) => {
-  var img = document.createElement("img");
+  var img = document.createElement('img');
 
   img.src = datas;
   // When the event "onload" is triggered we can resize the image.
   return new Promise((resolve) => {
     img.onload = () => {
       // We create a canvas and get its context.
-      var canvas = document.createElement("canvas");
-      var ctx = canvas.getContext("2d");
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
 
       // We set the dimensions at the wanted size.
       canvas.width = wantedWidth;
@@ -531,55 +743,53 @@ const resize = (datas, wantedWidth, wantedHeight) => {
 };
 function init() {
   closeEditQLSP();
-  localStorage.setItem("productList", JSON.stringify(productList));
+  localStorage.setItem('productList', JSON.stringify(productList));
   displayQLSP(productListHai);
 }
 
 function editQLSP(id) {
-  var name = document.getElementById("nameQLSP").value;
+  var name = document.getElementById('nameQLSP').value;
 
-  var typeinput = document.getElementsByName("type");
+  var typeinput = document.getElementsByName('type');
   var type;
   var flag = 0;
-  for(var i = 0 ;i<typeinput.length;i++)
-  if(typeinput[i].checked) 
-  {
-    type = typeinput[i].value;
-    flag = 1;
-    break;
-  }
-  if(flag == 0) type=""; 
-  var price = document.getElementById("priceQLSP").value;
-  var img = document.getElementById("imgQLSP");
-  var img2 = document.getElementById("img2QLSP");
-  var img3 = document.getElementById("img3QLSP");
-  var img4 = document.getElementById("img4QLSP");
-  var imgg = document.getElementById("imgQLSP").value;
-  var imgg2 = document.getElementById("img2QLSP").value;
-  var imgg3 = document.getElementById("img3QLSP").value;
-  var imgg4 = document.getElementById("img4QLSP").value;
+  for (var i = 0; i < typeinput.length; i++)
+    if (typeinput[i].checked) {
+      type = typeinput[i].value;
+      flag = 1;
+      break;
+    }
+  if (flag == 0) type = '';
+  var price = document.getElementById('priceQLSP').value;
+  var img = document.getElementById('imgQLSP');
+  var img2 = document.getElementById('img2QLSP');
+  var img3 = document.getElementById('img3QLSP');
+  var img4 = document.getElementById('img4QLSP');
+  var imgg = document.getElementById('imgQLSP').value;
+  var imgg2 = document.getElementById('img2QLSP').value;
+  var imgg3 = document.getElementById('img3QLSP').value;
+  var imgg4 = document.getElementById('img4QLSP').value;
 
   var checkPrice = /^[0-9]{1,15}$/;
-  if (price !== "")
+  if (price !== '')
     if (!checkPrice.test(price)) {
-      window.alert("Sai giá");
+      window.alert('Sai giá');
       return;
     }
 
-    let k = 0;
+  let k = 0;
   for (var i = 0; i < productList.length; i++) {
     if (productList[i].id == id) {
-      if (name !== "") productList[i].name = name;
-      if (type !== "") productList[i].type = type;
-      if (price !== "") productList[i].price = price;
+      if (name !== '') productList[i].name = name;
+      if (type !== '') productList[i].type = type;
+      if (price !== '') productList[i].price = price;
       k = i;
       break;
     }
   }
   var promises = [];
 
-
-  if (imgg !== "" && img.files[0])
+  if (imgg !== '' && img.files[0])
     promises.push(
       blobToBase64(img.files[0]).then((res) => {
         return resize(res, 500, 300).then((res2) => {
@@ -589,7 +799,7 @@ function editQLSP(id) {
       })
     );
 
-  if (imgg2 !== "" && img2.files[0])
+  if (imgg2 !== '' && img2.files[0])
     promises.push(
       blobToBase64(img2.files[0]).then((res) => {
         return resize(res, 500, 300).then((res2) => {
@@ -599,7 +809,7 @@ function editQLSP(id) {
       })
     );
 
-  if (imgg3 !== "" && img3.files[0])
+  if (imgg3 !== '' && img3.files[0])
     promises.push(
       blobToBase64(img3.files[0]).then((res) => {
         return resize(res, 500, 300).then((res2) => {
@@ -609,7 +819,7 @@ function editQLSP(id) {
       })
     );
 
-  if (imgg4 !== "" && img4.files[0])
+  if (imgg4 !== '' && img4.files[0])
     promises.push(
       blobToBase64(img4.files[0]).then((res) => {
         return resize(res, 500, 300).then((res2) => {
@@ -629,74 +839,73 @@ function editQLSP(id) {
       closeEditQLSP();
     })
     .catch((error) => {
-      console.error("Error during image processing:", error);
+      console.error('Error during image processing:', error);
     });
 }
 function openEditQLSP(id) {
-  var pa = document.getElementsByClassName("addEditQLSP")[0];
-  pa.innerHTML = "";
-  var form = document.createElement("div");
-  form.id = "formEditQLSP";
+  var pa = document.getElementsByClassName('addEditQLSP')[0];
+  pa.innerHTML = '';
+  var form = document.createElement('div');
+  form.id = 'formEditQLSP';
   form.innerHTML =
     '<h3 style="text-align: center;">Sửa sản phẩm</h3>' +
     '<label for="">Tên sản phẩm</label><br>' +
     '<input id="nameQLSP" type="text"><br>' +
-    '<p class="ghiLai" id="oldName"></p>'+
+    '<p class="ghiLai" id="oldName"></p>' +
     '<label for="">Loại</label><br>' +
-    `<div style="display: flex;">`+
+    `<div style="display: flex;">` +
     '<input type="radio" name="type" value="1">1<br>' +
     '<input type="radio" name="type" value="2">2<br>' +
     '<input type="radio" name="type" value="3">3<br>' +
     '<input type="radio" name="type" value="4">4<br>' +
-    '</div>'+
-    '<p class="ghiLai" id="oldType"></p>'+
+    '</div>' +
+    '<p class="ghiLai" id="oldType"></p>' +
     '<label for="">Giá</label><br>' +
     '<input id="priceQLSP" type="text"><br>' +
-    '<p class="ghiLai" id="oldPrice"></p>'+
+    '<p class="ghiLai" id="oldPrice"></p>' +
     '<label for="">Ảnh</label><br>' +
     '<input id="imgQLSP" type="file"><br>' +
     '<input id="img2QLSP" type="file"><br>' +
     '<input id="img3QLSP" type="file"><br>' +
     '<input id="img4QLSP" type="file"><br>' +
-    '<div style="display:flex">'+
-    '<img id="oldImg" style="width: 42px">'+
-    '<img id="oldImg2" style="width: 42px">'+
-    '<img id="oldImg3" style="width: 42px">'+
-    '<img id="oldImg4" style="width: 42px">'+
-    '</div>'+
+    '<div style="display:flex">' +
+    '<img id="oldImg" style="width: 42px">' +
+    '<img id="oldImg2" style="width: 42px">' +
+    '<img id="oldImg3" style="width: 42px">' +
+    '<img id="oldImg4" style="width: 42px">' +
+    '</div>' +
     '<button onclick="editQLSP(' +
     id +
     ')" style="float: right;" >Submit</button>' +
     '<button onclick="closeEditQLSP()" style="float: right;" >Cancel</button>';
   pa.appendChild(form);
-  for(var i = 0 ;i<productList.length;i++)
-  if(productList[i].id == id) 
-  {
-    var oldName = document.getElementById("oldName");
-    var oldType = document.getElementById("oldType");
-    var oldPrice = document.getElementById("oldPrice");
-    var oldImg = document.getElementById("oldImg");
-    var oldImg2 = document.getElementById("oldImg2");
-    var oldImg3 = document.getElementById("oldImg3");
-    var oldImg4 = document.getElementById("oldImg4");
-    oldName.innerHTML ='Tên cũ: '+productList[i].name;
-    oldType.innerHTML ='Loại cũ: '+productList[i].type;
-    oldPrice.innerHTML ='Giá cũ: '+productList[i].price;
-    oldImg.src = productList[i].img;
-    oldImg2.src = productList[i].img2;
-    oldImg3.src = productList[i].img3;
-    oldImg4.src = productList[i].img4;
-  }
+  for (var i = 0; i < productList.length; i++)
+    if (productList[i].id == id) {
+      var oldName = document.getElementById('oldName');
+      var oldType = document.getElementById('oldType');
+      var oldPrice = document.getElementById('oldPrice');
+      var oldImg = document.getElementById('oldImg');
+      var oldImg2 = document.getElementById('oldImg2');
+      var oldImg3 = document.getElementById('oldImg3');
+      var oldImg4 = document.getElementById('oldImg4');
+      oldName.innerHTML = 'Tên cũ: ' + productList[i].name;
+      oldType.innerHTML = 'Loại cũ: ' + productList[i].type;
+      oldPrice.innerHTML = 'Giá cũ: ' + productList[i].price;
+      oldImg.src = productList[i].img;
+      oldImg2.src = productList[i].img2;
+      oldImg3.src = productList[i].img3;
+      oldImg4.src = productList[i].img4;
+    }
 }
 function closeAddQLSP() {
-  var close = document.getElementById("formAddQLSP");
-  if (close) close.style.display = "none";
+  var close = document.getElementById('formAddQLSP');
+  if (close) close.style.display = 'none';
 }
 
 function init(product) {
   productList.push(product);
   productListHai = productList;
-  localStorage.setItem("productList", JSON.stringify(productList));
+  localStorage.setItem('productList', JSON.stringify(productList));
   displayQLSP(productListHai);
   closeAddQLSP();
 }
@@ -706,40 +915,35 @@ function addQLSP() {
     product.id = 1;
   } else product.id = productList[productList.length - 1].id + 1;
   product.count = 0;
-  var name = document.getElementById("nameQLSP").value;
+  var name = document.getElementById('nameQLSP').value;
 
-  var typeinput = document.getElementsByName("type");
+  var typeinput = document.getElementsByName('type');
   var type;
-  for(var i = 0;i<typeinput.length;i++)
-  if(typeinput[i].value !=="") type = typeinput[i].value;
+  for (var i = 0; i < typeinput.length; i++)
+    if (typeinput[i].value !== '') type = typeinput[i].value;
 
-  var price = document.getElementById("priceQLSP").value;
-  var imgg = document.getElementById("imgQLSP").value;
-  var imgg2 = document.getElementById("img2QLSP").value;
-  var imgg3 = document.getElementById("img3QLSP").value;
-  var imgg4 = document.getElementById("img4QLSP").value;
+  var price = document.getElementById('priceQLSP').value;
+  var imgg = document.getElementById('imgQLSP').value;
+  var imgg2 = document.getElementById('img2QLSP').value;
+  var imgg3 = document.getElementById('img3QLSP').value;
+  var imgg4 = document.getElementById('img4QLSP').value;
 
-  var img = document.getElementById("imgQLSP");
-  var img2 = document.getElementById("img2QLSP");
-  var img3 = document.getElementById("img3QLSP");
-  var img4 = document.getElementById("img4QLSP");
+  var img = document.getElementById('imgQLSP');
+  var img2 = document.getElementById('img2QLSP');
+  var img3 = document.getElementById('img3QLSP');
+  var img4 = document.getElementById('img4QLSP');
   var checkPrice = /^[0-9]{1,15}$/;
 
-  if (price !== "" )
+  if (price !== '')
     if (!checkPrice.test(price)) {
-      window.alert("Sai giá");
+      window.alert('Sai giá');
       return;
     }
   if (
-    name !== "" &&
-    type !== "" &&
-    price !== "" &&
-    (
-    imgg !== "" ||
-    imgg2 !== "" ||
-    imgg3 !== "" ||
-    imgg4 !== ""
-    )
+    name !== '' &&
+    type !== '' &&
+    price !== '' &&
+    (imgg !== '' || imgg2 !== '' || imgg3 !== '' || imgg4 !== '')
   ) {
     product.name = name;
     product.type = type;
@@ -783,28 +987,28 @@ function addQLSP() {
         });
       });
     else count++;
-      } else {
-    window.alert("Thiếu thông tin");
+  } else {
+    window.alert('Thiếu thông tin');
     return;
   }
   saveProductList();
 }
 function openAddQLSP() {
-  var pa = document.getElementsByClassName("addEditQLSP")[0];
-  pa.innerHTML = "";
-  var form = document.createElement("div");
-  form.id = "formAddQLSP";
+  var pa = document.getElementsByClassName('addEditQLSP')[0];
+  pa.innerHTML = '';
+  var form = document.createElement('div');
+  form.id = 'formAddQLSP';
   form.innerHTML =
     '<h3 style="text-align: center;">Thêm sản phẩm</h3>' +
     '<label for="">Tên sản phẩm</label><br>' +
     '<input id="nameQLSP" type="text"><br>' +
     '<label for="">Loại</label><br>' +
-    `<div style="display: flex;">`+
+    `<div style="display: flex;">` +
     '<input type="radio" name="type" value="1">1<br>' +
     '<input type="radio" name="type" value="2">2<br>' +
     '<input type="radio" name="type" value="3">3<br>' +
     '<input type="radio" name="type" value="4">4<br>' +
-    '</div>'+
+    '</div>' +
     '<label for="">Giá</label><br>' +
     '<input id="priceQLSP" type="text"><br>' +
     '<label for="">Ảnh</label><br>' +
@@ -817,9 +1021,9 @@ function openAddQLSP() {
   pa.appendChild(form);
 }
 function displayQLSP(List) {
-  content.innerHTML = "";
-  var khung = document.createElement("div");
-  khung.id = "admin-QLSP";
+  content.innerHTML = '';
+  var khung = document.createElement('div');
+  khung.id = 'admin-QLSP';
   khung.innerHTML = `<table border="1px" bordercolor="red" id="table-QLSP">
   <tr style="background-color: #7b517b;">
     <td>ID</td>
@@ -831,25 +1035,25 @@ function displayQLSP(List) {
     <td>Xóa</td>
   </tr>
   </table>`;
-  var table = khung.querySelector("table");
-    for (var i = 0; i < List.length; i++) {
-    let element = document.createElement("tr");
+  var table = khung.querySelector('table');
+  for (var i = 0; i < List.length; i++) {
+    let element = document.createElement('tr');
     element.innerHTML =
-      "<td>" +
+      '<td>' +
       List[i].id +
-      "</td>" +
+      '</td>' +
       '<td><img class="config" src="' +
       List[i].img +
       '" alt=""></td>' +
-      "<td>" +
+      '<td>' +
       List[i].name +
-      "</td>" +
-      "<td>" +
+      '</td>' +
+      '<td>' +
       List[i].type +
-      "</td>" +
-      "<td>" +
+      '</td>' +
+      '<td>' +
       List[i].price +
-      "đ</td>" +
+      'đ</td>' +
       '<td align="center"><img onclick="openEditQLSP(' +
       List[i].id +
       ')" class="config" src="../asset/icon/edit.png" alt=""></td>' +
@@ -858,8 +1062,8 @@ function displayQLSP(List) {
       ')" class="config" src="../asset/icon/delete.png" alt=""></td>';
     table.appendChild(element);
   }
-  let element = document.createElement("div");
-  element.id = "searchBar2";
+  let element = document.createElement('div');
+  element.id = 'searchBar2';
   element.innerHTML = `<div id="searchQLSP">
           <p>Loại:</p>
           <select id="search-type-QPSP">
@@ -875,8 +1079,8 @@ function displayQLSP(List) {
         <div id="addProductQLSP">
           <a href="#"><p onclick="openAddQLSP()">+ Thêm sản phẩm</p></a>
         </div>`;
-  let form = document.createElement("div");
-  form.className = "addEditQLSP";
+  let form = document.createElement('div');
+  form.className = 'addEditQLSP';
   content.appendChild(form);
   content.appendChild(element);
   content.appendChild(khung);
@@ -887,13 +1091,13 @@ function displayQLSP(List) {
 }
 function searchTKSP() {
   productListHai = productList;
-  var first = document.getElementById("firstDayTKSP").value;
-  var last = document.getElementById("lastDayTKSP").value;
-  if (first === "") {
+  var first = document.getElementById('firstDayTKSP').value;
+  var last = document.getElementById('lastDayTKSP').value;
+  if (first === '') {
     first = new Date(0);
   }
-  if (last === "") {
-    last = new Date("9999-12-31");
+  if (last === '') {
+    last = new Date('9999-12-31');
   }
   first = new Date(first);
   last = new Date(last);
@@ -913,11 +1117,11 @@ function searchTKSP() {
   displayTKSP(productListHai);
 }
 function displayTKSP(list) {
-  content.innerHTML = "";
-  var khung = document.createElement("div");
-  khung.id = "admin-TKSP";
-  var table = document.createElement("table");
-  table.id = "tableTKSP";
+  content.innerHTML = '';
+  var khung = document.createElement('div');
+  khung.id = 'admin-TKSP';
+  var table = document.createElement('table');
+  table.id = 'tableTKSP';
   table.innerHTML = `<tr>
   <td style="background-color : var(--accent-color) ;">Loại</td>
   <td style="background-color : var(--accent-color) ;">Đã bán</td>
@@ -925,63 +1129,57 @@ function displayTKSP(list) {
   </tr>`;
   content.appendChild(khung);
   khung.appendChild(table);
-  var search = document.createElement("div");
-  search.id = "searchBarTKSP";
+  var search = document.createElement('div');
+  search.id = 'searchBarTKSP';
   search.innerHTML = `<p>Từ ngày:</p>
   <input id="firstDayTKSP" type="date">
   <p>Đến ngày:</p>
   <input id="lastDayTKSP" type="date">
   <button onclick="searchTKSP()" >Tìm kiếm</button>`;
   content.appendChild(search);
-  var tongLoai1=0,tongLoai2=0,tongLoai3=0,tongLoai4=0, daban1=0, daban2=0,daban3=0,daban4=0;
-  for(var i =0;i<list.length;i++)
-  {
-    if(list[i].type == 1)
-    {
-      daban1+=list[i].count;
-      tongLoai1+=list[i].count*list[i].price;
+  var tongLoai1 = 0,
+    tongLoai2 = 0,
+    tongLoai3 = 0,
+    tongLoai4 = 0,
+    daban1 = 0,
+    daban2 = 0,
+    daban3 = 0,
+    daban4 = 0;
+  for (var i = 0; i < list.length; i++) {
+    if (list[i].type == 1) {
+      daban1 += list[i].count;
+      tongLoai1 += list[i].count * list[i].price;
     }
-    if(list[i].type == 2)
-    {
-      daban2+=list[i].count;
-      tongLoai2+=list[i].count*list[i].price;
+    if (list[i].type == 2) {
+      daban2 += list[i].count;
+      tongLoai2 += list[i].count * list[i].price;
     }
-    if(list[i].type == 3)
-    {
-      daban3+=list[i].count;
-      tongLoai3+=list[i].count*list[i].price;
+    if (list[i].type == 3) {
+      daban3 += list[i].count;
+      tongLoai3 += list[i].count * list[i].price;
     }
-    if(list[i].type == 4)
-    {
-      daban4+=list[i].count;
-      tongLoai4+=list[i].count*list[i].price;
+    if (list[i].type == 4) {
+      daban4 += list[i].count;
+      tongLoai4 += list[i].count * list[i].price;
     }
   }
-var hang1 = document.createElement("tr");
-hang1.innerHTML =
-  "<td>1</td>" +
-  "<td>" + daban1 + "</td>" +
-  "<td>" + tongLoai1 + "</td>";
-table.appendChild(hang1);
+  var hang1 = document.createElement('tr');
+  hang1.innerHTML =
+    '<td>1</td>' + '<td>' + daban1 + '</td>' + '<td>' + tongLoai1 + '</td>';
+  table.appendChild(hang1);
 
-var hang2 = document.createElement("tr");
-hang2.innerHTML =
-  "<td>2</td>" +
-  "<td>" + daban2 + "</td>" +
-  "<td>" + tongLoai2 + "</td>";
-table.appendChild(hang2);
+  var hang2 = document.createElement('tr');
+  hang2.innerHTML =
+    '<td>2</td>' + '<td>' + daban2 + '</td>' + '<td>' + tongLoai2 + '</td>';
+  table.appendChild(hang2);
 
-var hang3 = document.createElement("tr");
-hang3.innerHTML =
-  "<td>3</td>" +
-  "<td>" + daban3 + "</td>" +
-  "<td>" + tongLoai3 + "</td>";
-table.appendChild(hang3);
+  var hang3 = document.createElement('tr');
+  hang3.innerHTML =
+    '<td>3</td>' + '<td>' + daban3 + '</td>' + '<td>' + tongLoai3 + '</td>';
+  table.appendChild(hang3);
 
-var hang4 = document.createElement("tr");
-hang4.innerHTML =
-  "<td>4</td>" +
-  "<td>" + daban4 + "</td>" +
-  "<td>" + tongLoai4 + "</td>";
-table.appendChild(hang4);
+  var hang4 = document.createElement('tr');
+  hang4.innerHTML =
+    '<td>4</td>' + '<td>' + daban4 + '</td>' + '<td>' + tongLoai4 + '</td>';
+  table.appendChild(hang4);
 }

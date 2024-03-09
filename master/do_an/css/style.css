@@ -1,48 +1,48 @@
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-:root[data-theme="light"] {
-    /* --primary-color: #f2bed1; */
-    --secondary-color: #d6c1d7;
-    --accent-color: #7b517b;
-    --background-color: #dde0f8;
-    --text-color: #090609;
+:root[data-theme='light'] {
+  /* --primary-color: #f2bed1; */
+  --secondary-color: #d6c1d7;
+  --accent-color: #7b517b;
+  --background-color: #dde0f8;
+  --text-color: #090609;
 }
 
-:root[data-theme="dark"] {
-    --primary-color: #cbe90c;
-    --secondary-color: #070227;
-    --accent-color: #ff00ff;
-    --background-color: #2c2e43;
-    --text-color: #f2f0ff;
+:root[data-theme='dark'] {
+  --primary-color: #cbe90c;
+  --secondary-color: #070227;
+  --accent-color: #ff00ff;
+  --background-color: #2c2e43;
+  --text-color: #f2f0ff;
 }
 
 *::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 html {
-    min-height: 100vh;
-    scroll-behavior: smooth;
-    width: 100vw;
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  width: 100vw;
 }
 
 body {
-    min-height: 100%;
+  min-height: 100%;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 img {
-    max-width: 100%;
-    height: auto;
-    vertical-align: middle;
-    font-style: italic;
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+  font-style: italic;
 }
 
 /* div {
@@ -50,559 +50,566 @@ img {
 } */
 
 ul {
-    list-style-type: none;
+  list-style-type: none;
 }
 
 nav.navigationbar {
-    grid-area: head;
-    background: var(--primary-color);
-    width: 100%;
-    min-width: fit-content;
-    height: 60px;
-    display: flex;
-    justify-content: flex-start;
-    height: 120px;
-    background-image: linear-gradient(to left, #BDBBBE 100%, #9D9EA3 100%), radial-gradient(88% 271%, rgba(255, 255, 255, 0.25) 0%, rgba(254, 254, 254, 0.25) 1%, rgba(0, 0, 0, 0.25) 100%), radial-gradient(50% 100%, rgba(255, 255, 255, 0.30) 0%, rgba(0, 0, 0, 0.30) 100%);
-    background-blend-mode: normal, lighten, soft-light;
+  grid-area: head;
+  background: var(--primary-color);
+  width: 100%;
+  min-width: fit-content;
+  height: 60px;
+  display: flex;
+  justify-content: flex-start;
+  height: 120px;
+  background-image: linear-gradient(to left, #bdbbbe 100%, #9d9ea3 100%),
+    radial-gradient(
+      88% 271%,
+      rgba(255, 255, 255, 0.25) 0%,
+      rgba(254, 254, 254, 0.25) 1%,
+      rgba(0, 0, 0, 0.25) 100%
+    ),
+    radial-gradient(
+      50% 100%,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(0, 0, 0, 0.3) 100%
+    );
+  background-blend-mode: normal, lighten, soft-light;
 }
 
 .nav-content-left {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .account {
-    width: 100px;
-    height: 100%;
-    margin-left: auto;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+  width: 100px;
+  height: 100%;
+  margin-left: auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .hamburgerbutton {
-    min-width: fit-content;
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-    text-align: center;
-    margin: 1rem;
-    display: none;
+  min-width: fit-content;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  text-align: center;
+  margin: 1rem;
+  display: none;
 }
 
 .hamburgerbutton img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .brand {
-    text-align: center;
-    color: black;
-    margin: 0 1rem;
-    border: 0;
+  text-align: center;
+  color: black;
+  margin: 0 1rem;
+  border: 0;
 }
 
 .wrapper-flex {
-    display: flex;
-    justify-content: center;
-    height: calc(100vh - 60px);
-    overflow: hidden;
-    align-items: stretch;
+  display: flex;
+  justify-content: center;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+  align-items: stretch;
 }
 
 #left-menu * {
-    caret-color: transparent;
+  caret-color: transparent;
 }
 
 #left-menu {
-    border: 1px solid black;
-    width: 20%;
-    float: left;
-    font-size: 1.5rem;
+  border: 1px solid black;
+  width: 20%;
+  float: left;
+  font-size: 1.5rem;
 }
 
 #left-menu li:first-child {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 #left-menu li {
-    margin: 0 1rem;
-    margin-bottom: 1rem;
-    cursor: pointer;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
+  margin: 0 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
 }
 
 #left-menu li:hover {
-    animation: left-menu-hover 0.2s forwards;
+  animation: left-menu-hover 0.2s forwards;
 }
 
 @keyframes left-menu-hover {
-    from {
-        padding: 10px;
-    }
+  from {
+    padding: 10px;
+  }
 
-    to {
-        padding: 20px;
-    }
+  to {
+    padding: 20px;
+  }
 }
 
-
 .content {
-    width: 80%;
-    margin: 2rem;
-    margin-bottom: 0;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    background: white;
+  width: 80%;
+  margin: 2rem;
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: white;
 }
 
 #mngContentTitle img {
-    width: 80%;
-    height: 80%;
-    position: relative;
-    left: 10%;
+  width: 80%;
+  height: 80%;
+  position: relative;
+  left: 10%;
 }
 
 .dsDonHang {
-    height: 90%;
-    overflow-y: scroll;
+  height: 90%;
+  overflow-y: scroll;
 }
 
 .dsDonHang .donHang:first-child {
-    position: sticky;
-    inset: calc(5rem/16);
-    top: 0;
-    background-color: var(--accent-color);
-    border-top: calc(5rem/16) solid white;
-    overflow: scroll;
-    min-height: 2rem;
-    font-size: 1.25rem;
+  position: sticky;
+  inset: calc(5rem / 16);
+  top: 0;
+  background-color: var(--accent-color);
+  border-top: calc(5rem / 16) solid white;
+  overflow: scroll;
+  min-height: 2rem;
+  font-size: 1.25rem;
 }
 
 .content .dsDonHang .donHang {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 1px;
-    margin: calc(5rem / 16);
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 1px;
+  margin: calc(5rem / 16);
 }
 
-
-
-.donHang>* {
-    text-align: center;
-    min-width: 100px;
+.donHang > * {
+  text-align: center;
+  min-width: 100px;
 }
 
 .donHang .HanhDong {
-    display: flex;
-    flex-shrink: 0;
+  display: flex;
+  flex-shrink: 0;
 }
 
-
 .donHang .HanhDong:not(:first-child) {
-    justify-content: center;
-    align-items: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .donHang .HanhDong div {
-    width: 50%;
-    min-width: fit-content;
-    height: fit-content;
-    margin: calc(10rem/16);
-    font-size: 1.5rem;
-    font-weight: 900;
-    text-align: center;
-    cursor: pointer;
-    caret-color: transparent;
+  width: 50%;
+  min-width: fit-content;
+  height: fit-content;
+  margin: calc(10rem / 16);
+  font-size: 1.5rem;
+  font-weight: 900;
+  text-align: center;
+  cursor: pointer;
+  caret-color: transparent;
 }
 
 .donHang .HanhDong div:hover.accept {
-    color: lime;
+  color: lime;
 }
 
 .donHang .HanhDong div:hover.deny {
-    color: red;
+  color: red;
 }
 
 .searchBar {
-    min-height: 10%;
-    display: flex;
-    justify-content: space-around;
-    margin-top: auto;
-    flex-wrap: wrap;
+  min-height: 10%;
+  display: flex;
+  justify-content: space-around;
+  margin-top: auto;
+  flex-wrap: wrap;
 }
 
 .searchBar form {
-    display: flex;
-    align-items: center;
-    margin-left: 5px;
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
 }
 
 .searchBar form * {
-    margin: 2px;
+  margin: 2px;
 }
 
 form.dateSearch input {
-    width: fit-content;
-    min-height: 70%;
-    font-size: 1rem;
+  width: fit-content;
+  min-height: 70%;
+  font-size: 1rem;
 }
 
 form .applySearch {
-    width: 50px;
-    height: 70%;
+  width: 50px;
+  height: 70%;
 }
 
 form.otherSearch :is(input, select) {
-    width: 100px;
-    text-overflow: ellipsis;
-    min-height: 70%;
+  width: 100px;
+  text-overflow: ellipsis;
+  min-height: 70%;
 }
 
 .userList {
-    height: 90%;
-    width: 100%;
+  height: 90%;
+  width: 100%;
 }
 
 .userList .user {
-    display: grid;
-    grid-template-columns: calc(50rem/16) repeat(5, 1fr);
-    gap: 1px;
-    margin: calc(5rem/16);
+  display: grid;
+  grid-template-columns: calc(50rem / 16) repeat(5, 1fr);
+  gap: 1px;
+  margin: calc(5rem / 16);
 }
 
-.user>* {
-    box-shadow: 10px black;
-    text-align: center;
+.user > * {
+  box-shadow: 10px black;
+  text-align: center;
 }
 
-.user>*:not(:first-child) {
-    min-width: 100px;
-    overflow: scroll;
-    text-wrap: wrap;
+.user > *:not(:first-child) {
+  min-width: 100px;
+  overflow: scroll;
+  text-wrap: wrap;
 }
 
 .userList .user:first-child {
-    position: sticky;
-    inset: calc(5rem/16);
-    top: 0;
-    background-color: var(--accent-color);
-    border-top: calc(5rem/16) solid white;
-    font-size: 1.25rem;
+  position: sticky;
+  inset: calc(5rem / 16);
+  top: 0;
+  background-color: var(--accent-color);
+  border-top: calc(5rem / 16) solid white;
+  font-size: 1.25rem;
 }
 
-
 .user .hanhDong {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .user .hanhDong .delete {
-    width: 30px;
-    height: 30px;
-    margin-left: 10px;
-    caret-color: transparent;
-    cursor: pointer;
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+  caret-color: transparent;
+  cursor: pointer;
 }
-
+.user .hanhDong .update {
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+  caret-color: transparent;
+  cursor: pointer;
+}
 .hanhDong .delete:hover {
-    color: red;
+  color: green;
+}
+.hanhDong .delete:hover {
+  color: red;
 }
 
 .searchBar.flex-start {
-    justify-content: flex-start;
+  justify-content: flex-start;
 }
 
 .addAccount {
-    display: flex;
-    align-items: center;
-    margin-right: 1rem;
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
 }
 
 #userSearchType {
-    margin: 0 2px 0 1rem;
+  margin: 0 2px 0 1rem;
 }
 
-
 #userSearchValue {
-    margin-right: auto;
+  margin-right: auto;
 }
 
 #createAccountBox {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-    height: fit-content;
-    padding: 1rem;
-    position: absolute;
-    inset: 50%;
-    translate: -50% -50%;
-    animation: show-up 400ms ease;
-    z-index: 2;
-    background-color: whitesmoke;
-    border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height: fit-content;
+  padding: 1rem;
+  position: absolute;
+  inset: 50%;
+  translate: -50% -50%;
+  animation: show-up 400ms ease;
+  z-index: 2;
+  background-color: whitesmoke;
+  border-radius: 10px;
 }
 
 #createAccountBox .closeBtn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: red;
-    border-radius: 0 10px 0 10px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: red;
+  border-radius: 0 10px 0 10px;
 }
 
 #createAccountBox .btnWrapper {
-    margin-top: 20px;
-    border: 0;
+  margin-top: 20px;
+  border: 0;
 }
 
 .btnWrapper button {
-    margin: 0 .5rem;
-    width: 50px;
-    height: 30px;
+  margin: 0 0.5rem;
+  width: 50px;
+  height: 30px;
 }
 
 #createAccountBox input {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .img-product {
-    height: 75px;
+  height: 75px;
 }
 
 .config {
-    height: 55px;
-    cursor: pointer;
+  height: 55px;
+  cursor: pointer;
 }
 
 #searchQLSP {
-    align-items: center;
-    display: flex;
-    margin-left: 20px;
+  align-items: center;
+  display: flex;
+  margin-left: 20px;
 }
 
 #searchBar2 {
-    display: flex;
-    height: 7%;
-    margin-top: auto;
-    flex-wrap: wrap;
+  display: flex;
+  height: 7%;
+  margin-top: auto;
+  flex-wrap: wrap;
 }
 
 #searchBar2 input {
-    height: 100%;
-    margin-left: 2px;
+  height: 100%;
+  margin-left: 2px;
 }
 
 #searchBar2 select {
-    height: 100%;
+  height: 100%;
 }
 
 #searchBar2 button {
-    height: 100%;
-    margin-left: 1px;
+  height: 100%;
+  margin-left: 1px;
 }
 
 #searchBar2 div {
-    border: none;
+  border: none;
 }
 
 #admin-QLSP {
-    height: 90%;
-    overflow: scroll;
-    position: relative;
+  height: 90%;
+  overflow: scroll;
+  position: relative;
 }
 
 #table-QLSP {
-    width: 100%;
+  width: 100%;
 }
 
 #table-QLSP tr:first-child {
-    position: sticky;
-    inset: 0;
+  position: sticky;
+  inset: 0;
 }
 
 #addProductQLSP {
-    display: flex;
-    align-items: center;
-    margin-left: auto;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
 }
 
 #phanTrang {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 3%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3%;
 }
 
 #phanTrang button {
-    width: 100px;
-    height: 100%;
+  width: 100px;
+  height: 100%;
 }
 
 .addEditQLSP {
-    border: none;
-    width: 180px;
-    justify-content: center;
-    position: absolute;
-    top: calc(50% - 130px);
-    left: calc(50% - 90px);
-    border-radius: 2%;
-    background-color: pink;
-    z-index: 100;
+  border: none;
+  width: 180px;
+  justify-content: center;
+  position: absolute;
+  top: calc(50% - 130px);
+  left: calc(50% - 90px);
+  border-radius: 2%;
+  background-color: pink;
+  z-index: 100;
 }
 
 #admin-TKSP {
-    height: 20%;
-    overflow-x: auto;
+  height: 20%;
+  overflow-x: auto;
 }
 
 #tableTKSP {
-    width: 100%;
+  width: 100%;
 }
 
 #tableTKSP td {
-    border: 1px solid red;
+  border: 1px solid red;
 }
 
 #searchBarTKSP {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 10%;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 10%;
+  justify-content: center;
 }
 
 #searchBarTKSP input {
-    height: 100%;
+  height: 100%;
 }
 
 #searchBarTKSP button {
-    height: 100%;
+  height: 100%;
 }
-.ghiLai
-{
-    color: red;
-    font-size: 14px;
+.ghiLai {
+  color: red;
+  font-size: 14px;
 }
-.imgGhiLai
-{
-    justify-content: center;
-    height: 30px;
+.imgGhiLai {
+  justify-content: center;
+  height: 30px;
 }
-.PTQLSP
-{
-    padding-left: 10px;
-    padding-right: 10px;
-    border: 1px solid black;
+.PTQLSP {
+  padding-left: 10px;
+  padding-right: 10px;
+  border: 1px solid black;
 }
 @keyframes show-up {
-    0% {
-        opacity: 0;
-        translate: -50% -100%;
-    }
+  0% {
+    opacity: 0;
+    translate: -50% -100%;
+  }
 
-    100% {
-        opacity: 1;
-    }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes show-out {
-    0% {
-        opacity: 1;
-    }
+  0% {
+    opacity: 1;
+  }
 
-    100% {
-        opacity: 0;
-        translate: -50% -100%;
-    }
+  100% {
+    opacity: 0;
+    translate: -50% -100%;
+  }
 }
 
+@media screen and (max-width: 800px) {
+  .searchBar form {
+    margin: 0;
+    margin-right: auto;
+    overflow: scroll;
+  }
 
-@media screen and (max-width:800px) {
-    .searchBar form {
-        margin: 0;
-        margin-right: auto;
-        overflow: scroll;
-    }
+  .searchBar form * {
+    margin: 1px;
+  }
 
-    .searchBar form * {
-        margin: 1px;
-    }
-
-    .searchBar form input {
-        font-size: 1rem;
-        width: 100px;
-    }
+  .searchBar form input {
+    font-size: 1rem;
+    width: 100px;
+  }
 }
 
+@media screen and (max-width: 900px) {
+  .wrapper-flex {
+    flex-direction: column;
+    justify-content: flex-start;
+    height: fit-content;
+  }
 
-@media screen and (max-width:900px) {
-    .wrapper-flex {
-        flex-direction: column;
-        justify-content: flex-start;
-        height: fit-content;
-    }
+  #left-menu {
+    width: 100%;
+    display: none;
+    margin: 1rem 0 0 0;
+  }
 
-    #left-menu {
-        width: 100%;
-        display: none;
-        margin: 1rem 0 0 0;
-    }
+  .hamburgerbutton {
+    display: block;
+  }
 
-    .hamburgerbutton {
-        display: block;
-    }
+  .content {
+    width: 100%;
+    margin: 1rem 0 0 0;
+    height: calc(60% - 29px);
+  }
 
-    .content {
-        width: 100%;
-        margin: 1rem 0 0 0;
-        height: calc(60% - 29px);
-    }
+  .userList {
+    overflow: scroll;
+  }
 
+  .userList .user:first-child {
+    overflow: auto;
+    height: auto;
+    white-space: nowrap;
+  }
 
-    .userList {
-        overflow: scroll;
-    }
+  #admin-QLSP {
+    margin-top: 1rem;
+  }
 
-    .userList .user:first-child {
-        overflow: auto;
-        height: auto;
-        white-space: nowrap;
-    }
+  #phanTrang {
+    margin-top: 2rem;
+    min-height: fit-content;
+  }
 
+  #phanTrang button {
+    height: auto;
+  }
 
-    #admin-QLSP {
-        margin-top: 1rem;
-    }
+  .donHang:first-child {
+    font-size: 1rem;
+  }
 
-    #phanTrang {
-        margin-top: 2rem;
-        min-height: fit-content;
-    }
-
-    #phanTrang button {
-        height: auto;
-    }
-
-    .donHang:first-child {
-        font-size: 1rem;
-    }
-
-    .donHang .HanhDong div {
-        font-size: 1rem;
-        margin: 0;
-    }
+  .donHang .HanhDong div {
+    font-size: 1rem;
+    margin: 0;
+  }
 }
