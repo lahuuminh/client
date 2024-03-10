@@ -1,5 +1,19 @@
-//lấy giá trị mảng productList
-var productList = [];
+fetch('http://localhost:8080/findAllProduct')
+.then(response => {
+  if (!response.ok) {
+    throw new Error('Yêu cầu không thành công');
+  }
+  return response.json(); // Trả về promise
+})
+.then(data => {
+  productList=data;
+  productList2 = productList;
+  kq = productList;
+  // console.log(productList);
+})
+.catch(error => {
+  console.error('Lỗi:', error);
+});
 function getProductList() {
   //hàm lấy mảng từ storage
   var productStored = localStorage.getItem("productList"); //lấy mảng sản phẩm vào storage
@@ -22,8 +36,7 @@ function runSaveProductList() {
 }
 // hiển thị sản phẩm
 function productDisplay2() {
-  var productList2 = [];
-  productList2 = productList;
+  // console.log(productList2)
   for(var i = 0 ;i<productList2.length;i++)
   for(var j = i+1; j<productList2.length;j++)
   {
@@ -46,31 +59,31 @@ function productDisplay2() {
 
   //thêm sản phẩm
   for (var i = 0; i < productList2.length; i++) {
-    let productType = parseInt(productList2[i].type) - 1;
+    let productType = parseInt(productList2[i].theloai) - 1;
     if (count[productType] < 9) {
       //điều kiện cho việc hiển thị sản phẩm của mỗi danh sách
       if (count[productType] % maxIndex === 0) {
         newRow = list[productType].insertRow(-1);
-        if(productList2[i].name === "Cosplay: Cyberpunk Mặt Nạ") console.log(list[productType]);
+        if(productList2[i].ten === "Cosplay: Cyberpunk Mặt Nạ") console.log(list[productType]);
         if (count[productType] >= maxIndex) {
           //điều kiện để thêm class cho danh sách cần hiển thị thêm
           newRow.classList.add("alt_list_" + (productType + 1)); //1-indexed
         }
       }
       var newCell = newRow.insertCell(count[productType] % maxIndex);
+      url=productList2[i].listimg[0].url
       newCell.innerHTML =
         '<div class="product-container" onclick="showDetail(this)">' +
         '<div class="product-img">' +
         '<img src="' +
-        productList2[i].img +
+        url+
         '"alt="product-img">' +
         "</div>" +
         '<div class="product-name">' +
-        productList2[i].name +
+        productList2[i].ten +
         "</div>" +
-        '<div class="product-price">' +
-        productList2[i].price +
-        "đ</div>" +
+        '<div class="product-price">'+
+        productList2[i].gia+"</div>" +
         "</div>";
       count[productType]++;
     }
@@ -90,8 +103,6 @@ function addProduct(name, price, type, img, img2, img3, img4, id) {
     id: id,
     count: 0,
   };
-  productList.push(product);
-  productList2 = productList;
 }
 //thêm sản phẩm
 addProduct(

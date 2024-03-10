@@ -6,10 +6,11 @@ let orderList =
     ? JSON.parse(localStorage.getItem("orderList"))
     : [];
 var productAdded = [];
-
+var chitiethoadon = JSON.parse(localStorage.getItem('chitiethoadon')) || [];
 //phương thức thêm sản phẩm vào giỏ hàng
-function cartAdd(name, price, amount, img) {
+function cartAdd(productId,name, price, amount, img) {
   var product = {
+    productId: productId,
     name: name,
     price: price,
     amount: amount,
@@ -94,7 +95,7 @@ function cartDisplay() {
       "</div>";
     cartPrice = cartRow.insertCell(0);
     cartPrice.innerHTML =
-      '<div class="product-price">' + productAdded[i].price + "</div>";
+      '<div class="product-price">' + productAdded[i].price +"</div>";
 
     cartName = cartRow.insertCell(0);
     cartName.innerHTML =
@@ -109,11 +110,119 @@ function cartDisplay() {
       "</div>";
   }
 }
-
 var listTKSP = JSON.parse(localStorage.getItem("listTKSP"));
 if(!listTKSP) listTKSP = [];
 //thanh toán
-function payAll() {
+// function payAll() {
+//   console.log(1);
+  
+//   for(var i = 0;i < productAdded.length;i++)
+//   {
+//     var a = {};
+//     var currentDate = new Date();
+//     a.name = productAdded[i].name;
+//     a.amount = productAdded[i].amount;
+//     a.date = currentDate.getFullYear() + '-' + (currentDate.getMonth() + 1) + '-' + currentDate.getDate();
+//     listTKSP.push(a);
+//   }
+//   console.log(listTKSP);
+//   localStorage.setItem("listTKSP",JSON.stringify(listTKSP));
+//   var currentUser = JSON.parse(localStorage.getItem("currentUser"));
+//   if (!productAdded.length) {
+//     alert("Bạn chưa mua gì cả :(");
+//     return;
+//   }
+//   if (!confirm("Bạn có chắc chắn muốn mua hàng?")) return;
+  
+//   let madon =
+//     "WB" +
+//     new Date().getDate() +
+//     "-" +
+//     new Date().getMonth() +
+//     (parseInt(new Date().getTime()) % 1e8);
+//   let khachhang = currentUser.userName;
+//   let sp = "";
+//   const url2 = 'http://localhost:8080/hoadon/add';
+//   // productAdded.map((x) => {
+//   //   x['mahoadon'] = madon;
+//   //   chitiethoadon.push(x);
+//   // });
+//   let date = new Date().toLocaleDateString();
+//   let order = {
+//     mahoadon: madon,
+//     trangthaihoadon: "Wating",
+//     ngaymua: date,
+//     tongtien: total,
+//     user_id: 1
+//   };
+// fetch(url2, {
+//   method: 'POST', // Specify POST method for adding product
+//   body: JSON.stringify(order), // Convert product object to JSON string
+//   headers: { // Optional headers, can be used for authentication etc.
+//     'Content-Type': 'application/json' // Specify content type as JSON
+//   }
+// })
+// .then(response => {
+//   if (response.ok) {
+//     console.log('hoadon added successfully!');
+//     saveProductAdded();
+//   productAdded.length = 0;
+//   deleteAll();
+//   saveProductAdded();
+  // orderList.push(order);
+  // localStorage.setItem("orderList", JSON.stringify(orderList));
+//   } else {
+//     console.error('Error adding hoadon:', response.statusText);
+//   }
+// })
+// .catch(error => {
+//   console.error('Error:', error);
+// });
+//   productAdded.forEach((item) => {
+//     sp += item.name + "[" + item.amount + "]</br>";
+//       // item['mahoadon'] = madon;
+//       // chitiethoadon.push(item);
+//       // const price1=item.price
+//       // const price_double = parseDouble(price1.slice(0, -1)); // 16000      
+//       // console.log(price_double)
+//       chitiethoadon={
+//         mahoadon: madon,
+//         masanpham: item.productId,
+//         gia: item.price,
+//         soluong: item.amount,
+//       }
+//       const url1 = 'http://localhost:8080/chitiethoadon/add';
+//       console.log(chitiethoadon)
+//     fetch(url1, {
+//       method: 'POST', // Specify POST method for adding product
+//       body: JSON.stringify(chitiethoadon), // Convert product object to JSON string
+//       headers: { // Optional headers, can be used for authentication etc.
+//         'Content-Type': 'application/json' // Specify content type as JSON
+//       }
+//     })
+//     .then(response => {
+//       if (response.ok) {
+//         console.log('Chitiethoadon added successfully!');
+//       } else {
+//         console.error('Error adding chitiethoadon:', response.statusText);
+//       }
+//     })
+//     .catch(error => {
+//       console.error('Error:', error);
+//     });
+//         localStorage.setItem('chitiethoadon', JSON.stringify(chitiethoadon));
+//   });
+// }
+
+
+async function payAll() {
+    console.log(1);
+  //tongtien
+  // for (var i = 0; i < productAdded.length; i++) {
+  //   var productPrice = productAdded[i].price
+  //   var amount = parseFloat(productAdded[i].amount);
+  //   total += parseFloat(productPrice) * amount;
+  // }
   for(var i = 0;i < productAdded.length;i++)
   {
     var a = {};
@@ -140,27 +249,94 @@ function payAll() {
     (parseInt(new Date().getTime()) % 1e8);
   let khachhang = currentUser.userName;
   let sp = "";
-  productAdded.forEach((item) => {
-    sp += item.name + "[" + item.amount + "]</br>";
-  });
-  let date = new Date().toLocaleDateString();
+  const url2 = 'http://localhost:8080/hoadon/add';
+    let date = new Date().toLocaleDateString();
   let order = {
-    userAccount: currentUser.accountName,//đã thêm chỗ này
-    maDon: madon,
-    khachHang: khachhang,
-    sanPham: sp,
-    tongTien: total,
-    ngayLap: date,
-    trangThai: "waiting",
+    mahoadon: madon,
+    trangthaihoadon: "Wating",
+    ngaymua: date,
+    tongtien: total,
+    user_id: 1
   };
-  saveProductAdded();
-  productAdded.length = 0;
-  deleteAll();
-  saveProductAdded();
-  orderList.push(order);
-  localStorage.setItem("orderList", JSON.stringify(orderList));
-}
+  localStorage.setItem("hoadon", JSON.stringify(order));
+  // localStorage.setItem('hoadon', JSON.stringify(order));
+  try {
+    // Gửi yêu cầu hóa đơn trước
+    await fetch(url2, {
+      method: 'POST',
+      body: JSON.stringify(order),
+      headers: { 'Content-Type': 'application/json' }
+    });
 
+    console.log('Hóa đơn đã được thêm thành công!');
+    // ... mã lưu hóa đơn ...
+
+    // Gửi yêu cầu chi tiết hóa đơn cho từng sản phẩm
+    //   productAdded.forEach((item) => {
+//     sp += item.name + "[" + item.amount + "]</br>";
+//       // item['mahoadon'] = madon;
+//       // chitiethoadon.push(item);
+//       // const price1=item.price
+//       // const price_double = parseDouble(price1.slice(0, -1)); // 16000      
+//       // console.log(price_double)
+//       chitiethoadon={
+//         mahoadon: madon,
+//         masanpham: item.productId,
+//         gia: item.price,
+//         soluong: item.amount,
+//       }
+//       const url1 = 'http://localhost:8080/chitiethoadon/add';
+//       console.log(chitiethoadon)
+//     fetch(url1, {
+//       method: 'POST', // Specify POST method for adding product
+//       body: JSON.stringify(chitiethoadon), // Convert product object to JSON string
+//       headers: { // Optional headers, can be used for authentication etc.
+//         'Content-Type': 'application/json' // Specify content type as JSON
+//       }
+//     })
+    productAdded.forEach(async (item) => {
+          sp += item.name + "[" + item.amount + "]</br>";
+            // item['mahoadon'] = madon;
+            // chitiethoadon.push(item);
+            // const price1=item.price
+            // const price_double = parseDouble(price1.slice(0, -1)); // 16000      
+            // console.log(price_double)
+            chitiethoadon={
+              mahoadon: madon,
+              masanpham: item.productId,
+              gia: item.price,
+              soluong: item.amount,
+            }
+            console.log(chitiethoadon)
+            const url1 = 'http://localhost:8080/chitiethoadon/add';
+            await fetch(url1, {
+              method: 'POST',
+              body: JSON.stringify(chitiethoadon),
+              headers: { 'Content-Type': 'application/json' }
+            })
+    })
+  
+    saveProductAdded();
+    productAdded.length = 0;
+    deleteAll();
+    saveProductAdded();
+    localStorage.setItem('chitiethoadon', JSON.stringify(chitiethoadon));
+    
+  } catch (error) {
+    console.error('Lỗi:', error);
+    // Xử lý lỗi phù hợp
+  }
+}
+//tongtien
+function totalProduct() {
+  total = 0;
+  for (var i = 0; i < productAdded.length; i++) {
+    var productPrice = productAdded[i].price
+    var amount = parseFloat(productAdded[i].amount);
+    total += parseFloat(productPrice) * amount;
+  }
+  totalCash.innerText = "tổng: " + total + "";
+}
 // phương thức xóa sản phẩm
 function deleteProduct(button) {
   var row = button.parentNode.parentNode; //lấy chỉ số hàng trong bảng quản lý
@@ -177,17 +353,6 @@ function deleteProduct(button) {
   productAdded = copy;
   saveProductAdded();
   updateTotal();
-}
-
-//phương thức tổng số tiền
-function totalProduct() {
-  total = 0;
-  for (var i = 0; i < productAdded.length; i++) {
-    var productPrice = productAdded[i].price.slice(0, -1);
-    var amount = parseFloat(productAdded[i].amount);
-    total += parseFloat(productPrice) * amount;
-  }
-  totalCash.innerText = "tổng: " + total + " đ";
 }
 
 //phương thức tăng số lượng sản phẩm
