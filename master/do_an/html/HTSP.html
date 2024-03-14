@@ -148,10 +148,58 @@
     var kq = [];
     var productPerPage = 40;
     var currentPage  = 1;
-    var productStored = localStorage.getItem('productList');
-    if (productStored) productList = JSON.parse(productStored);
-    productList2 = productList;
-    kq = productList;
+ fetch('http://localhost:8080/findAllProduct')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Yêu cầu không thành công');
+    }
+    return response.json(); // Trả về promise
+  })
+  .then(data => {
+ productList=data;
+productList2 = productList;
+kq = productList;
+displayProduct(productList);
+  })
+  .catch(error => {
+    console.error('Lỗi:', error);
+  });
+    
+    //hien thi san pham
+    function displayProduct(d)
+    { 
+        var b = document.querySelector("#so-luong");
+        b.innerHTML = 
+        '<p>'+ kq.length +' sản phẩm</p>'
+        var a = document.getElementById("archive-product");
+        if(d.length == 0)
+        {
+            a.innerHTML = 
+            '<h1>Không có sản phẩm theo yêu cầu</h1>';
+            return;
+        }
+        a.innerHTML="";
+        for(var i=0;i<d.length;i++)
+        {      
+            if (d[i].listimg && d[i].listimg.length > 0) { // Kiểm tra xem listimg có tồn tại và có phần tử hay không
+                var b = document.createElement("div");
+                b.className = "inner-product";
+                b.setAttribute('onclick', 'showDetail2(this)');
+                b.dataset.id = d[i].masanpham;
+                url = d[i].listimg[0].url;
+            b.innerHTML =  
+            '<div class="product-img"><img src="'+url+'" alt="delete_icon"></div>'+
+            '<div class="product-content">'+
+                '<p class="name-product">'+d[i].ten+'</p>'+
+                '<p class="price-product">Giá: '+d[i].gia+'</p>'+
+            '</div>'
+            a.appendChild(b);
+            }else {
+                // Xử lý trường hợp listimg trống hoặc không tồn tại
+                console.warn("Sản phẩm", d[i].masanpham, "không có URL hình ảnh");
+              }
+        }
+    }
     function closeTKNC()
     {
         var c = document.getElementById("TKNCkhung");
@@ -188,7 +236,7 @@
         {
             for(var i = 0;i<productList.length;i++)
             {
-                if(productList[i].name.toLowerCase().indexOf(name)>-1&&productList[i].price>=min&&productList[i].price<=max&&productList[i].type == type)
+                if(productList[i].ten.toLowerCase().indexOf(name)>-1&&productList[i].gia>=min&&productList[i].gia<=max&&productList[i].theloai == type)
                 kq.push(productList[i]);
             }   
         }
@@ -196,7 +244,7 @@
         {
             for(var i = 0;i<productList.length;i++)
             {
-                if(productList[i].name.toLowerCase().indexOf(name)>-1&&productList[i].price>=min&&productList[i].price<=max)
+                if(productList[i].ten.toLowerCase().indexOf(name)>-1&&productList[i].gia>=min&&productList[i].gia<=max)
                 kq.push(productList[i]);
             }
         }
@@ -253,78 +301,89 @@
     window.onload = function(){
         displayUserName();
     }
-    // hiển thị sản phẩm
-    function displayProduct(d)
-    {
-        var b = document.querySelector("#so-luong");
-        b.innerHTML = 
-        '<p>'+ kq.length +' sản phẩm</p>'
-        var a = document.getElementById("archive-product");
-        if(d.length == 0)
-        {
-            a.innerHTML = 
-            '<h1>Không có sản phẩm theo yêu cầu</h1>';
-            return;
-        }
-        a.innerHTML="";
-        for(var i=0;i<d.length;i++)
-        {   
-            var b = document.createElement("div");
-            b.className = "inner-product";
-            b.setAttribute('onclick', 'showDetail2(this)');
-            b.innerHTML =  
-            '<div class="product-img"><img src="'+d[i].img+'" alt=""></div>'+
-            '<div class="product-content">'+
-                '<p class="name-product">'+d[i].name+'</p>'+
-                '<p class="price-product">Giá: '+d[i].price+'đ</p>'+
-            '</div>'
-            a.appendChild(b);
-        }
-    }
-    displayProduct(productList2)
 
     // Tìm kiếm bằng tên
-    function search()
-    {
-        kq = [];
-        var input = document.getElementById("text-input-search").value.toLowerCase();
-        for(var i = 0; i<productList2.length;i++)
-        if(productList2[i].name.toLowerCase().indexOf(input) > -1)
+     function search()
+     {
+         kq = [];
+         var input = document.getElementById("text-input-search").value.toLowerCase();
+         for(var i = 0; i<productList2.length;i++)
+       if(productList2[i].ten.toLowerCase().indexOf(input) > -1)
         kq.push(productList2[i]);
-        phanTrang(1);
-    }
-    
-    //tìm kiếm từ trang chủ
-    var out = localStorage.getItem('mainSearch'); //nhận kết quả tìm kiếm từ local
-    // var searchRtxt = document.getElementById('search_result_txt'); //hiển thị dòng kết quả: out
-    var mainNameInput;
-    out = JSON.parse(out);
-    if (out != null) {
-        if (out.name !== '')
-            //hiển thị kết quả tìm kiếm
-            // searchRtxt.innerHTML = 'kết quả tìm kiểm:<strong> ' + out.name + '</strong>.';
-            mainNameInput = out.name;
-        if (out.sign) {
-            searchFromMain();
-            var reSearch = {
-                name:"",
-                sign:false,
-            }
-            localStorage.setItem('mainSearch', JSON.stringify(reSearch));
-        }
-    }
-    else displayProduct(productList2); //hiển thị sản phẩm
-    
-    function searchFromMain()
-    {
-        kq = [];
-        var input = mainNameInput.toLowerCase();
-        for(var i = 0; i<productList2.length;i++)
-            if(productList2[i].name.toLowerCase().indexOf(input) > -1)
-        kq.push(productList2[i]);
-        displayProduct(kq);
-    }
-
+         phanTrang(1);
+     } 
+//      var out = localStorage.getItem('mainSearch'); //nhận kết quả tìm kiếm từ local
+//     var searchRtxt = document.getElementById('search_result_txt'); //hiển thị dòng kết quả: out
+//     var mainNameInput;
+//     out = JSON.parse(out);
+//     if (out != null) {
+//         if (out.name !== '')
+//             //hiển thị kết quả tìm kiếm
+//             // searchRtxt.innerHTML = 'kết quả tìm kiểm:<strong> ' + out.name + '</strong>.';
+//             mainNameInput = out.name;
+//             // console.log(mainNameInput);
+//         if (out.sign) {
+//             searchFromMain();
+//             var reSearch = {
+//                 name:"",
+//                 sign:false,
+//             }
+//             localStorage.setItem('mainSearch', JSON.stringify(reSearch));
+//         }
+//     }
+//     else displayProduct(productList); 
+//     function searchFromMain()
+//     {
+//         kq= [];
+//         var input = mainNameInput.toLowerCase();
+//         // console.log(productList);
+//         for(var i = 0; i<productList.length;i++){
+//             if(productList[i].ten.toLowerCase().indexOf(input) > -1){
+//                 console.log(productList)
+//         kq.push(productList);
+//         console.log(kq);
+//         displayProduct1(kq);
+//             }
+//     }
+// }
+//     //hienthisanpham2
+//     function displayProduct1(d)
+//     {
+//         var b = document.querySelector("#so-luong");
+//         b.innerHTML = 
+//         '<p>'+ kq.length +' sản phẩm</p>'
+//         var a = document.getElementById("archive-product");
+//         if(d.length == 0)
+//         {
+//             a.innerHTML = 
+//             '<h1>Không có sản phẩm theo yêu cầu</h1>';
+//             return;
+//         }
+//         a.innerHTML="";
+//         for(var i=0;i<d.length;i++)
+//         {      
+//             if (d[i].listimg && d[i].listimg.length > 0) { // Kiểm tra xem listimg có tồn tại và có phần tử hay không
+//                 var b = document.createElement("div");
+//                 b.className = "inner-product";
+//                 b.setAttribute('onclick', 'showDetail2(this)');
+//                 b.dataset.id = d[i].masanpham;
+//                 url = d[i].listimg[0].url;
+//             b.innerHTML =  
+//             '<div class="product-img"><img src="'+url+'" alt="delete_icon"></div>'+
+//             '<div class="product-content">'+
+//                 '<p class="name-product">'+d[i].ten+'</p>'+
+//                 '<p class="price-product">Giá: '+d[i].gia+'</p>'+
+//             '</div>'
+//             a.appendChild(b);
+//             }else {
+//                 // Xử lý trường hợp listimg trống hoặc không tồn tại
+//                 console.warn("Sản phẩm", d[i].masanpham, "không có URL hình ảnh");
+//               }
+//         }
+//     }
+//      var productStored = localStorage.getItem('productList');
+//     if (productStored) productList = JSON.parse(productStored); 
+    //hiển thị sản phẩm
     function all1()
     {
         var type  = document.getElementById("type-output");
@@ -344,7 +403,7 @@
         '<h1 id="type-output">Mô Hình Lẻ</h1>';
         productList2 = [];
         for(var i=0;i<productList.length;i++)
-        if(productList[i].type ==  1) productList2.push(productList[i]);
+        if(productList[i].theloai ==  1) productList2.push(productList[i]);
         kq = productList2;
         phanTrang(1);
     }
@@ -356,7 +415,7 @@
         '<h1 id="type-output">Mô Hình Chibi</h1>';
         productList2 = [];
         for(var i=0;i<productList.length;i++)
-        if(productList[i].type ==  2) productList2.push(productList[i]);
+        if(productList[i].theloai ==  2) productList2.push(productList[i]);
         kq = productList2;
         phanTrang(1);
     }
@@ -368,7 +427,7 @@
         '<h1 id="type-output">Bộ Mô Hình</h1>';
         productList2 = [];
         for(var i=0;i<productList.length;i++)
-        if(productList[i].type ==  3) productList2.push(productList[i]);
+        if(productList[i].theloai ==  3) productList2.push(productList[i]);
         kq = productList2;
         phanTrang(1);
     }
@@ -380,7 +439,7 @@
         '<h1 id="type-output">Cosplay</h1>';
         productList2 = [];
         for(var i=0;i<productList.length;i++)
-        if(productList[i].type ==  4) productList2.push(productList[i]);
+        if(productList[i].theloai ==  4) productList2.push(productList[i]);
         kq = productList2;
         phanTrang(1);
     }
@@ -415,7 +474,7 @@
         {
             var index = i;
             for(var j=i+1;j<kq.length;j++)
-            if(kq[index].name<kq[j].name) index = j;
+            if(kq[index].ten<kq[j].ten) index = j;
             var c = kq[i];
             kq[i] = kq[index];
             kq[index] = c;
@@ -429,7 +488,7 @@
         {
             var index = i;
             for(var j=i+1;j<kq.length;j++)
-            if(kq[index].name>kq[j].name) index = j;
+            if(kq[index].ten>kq[j].ten) index = j;
             var c = kq[i];
             kq[i] = kq[index];
             kq[index] = c;
@@ -443,7 +502,7 @@
         {
             var index = i;
             for(var j=i+1;j<kq.length;j++)
-            if(parseFloat(kq[index].price)>parseFloat(kq[j].price)) index = j;
+            if(parseFloat(kq[index].gia)>parseFloat(kq[j].gia)) index = j;
             var c = kq[i];
             kq[i] = kq[index];
             kq[index] = c;
@@ -457,7 +516,7 @@
         {
             var index = i;
             for(var j=i+1;j<kq.length;j++)
-            if(parseFloat(kq[index].price)<parseFloat(kq[j].price)) index = j;
+            if(parseFloat(kq[index].gia)<parseFloat(kq[j].gia)) index = j;
             var c = kq[i];
             kq[i] = kq[index];
             kq[index] = c;
@@ -476,7 +535,7 @@
         if (!min) min = 0;
         if (!max) max = Infinity;
         for(var i=0;i<productList2.length;i++)
-        if(productList2[i].price>=min&&productList2[i].price<=max &&productList2[i].name.toLowerCase().indexOf(search) > -1) kq.push(productList2[i]);
+        if(productList2[i].gia>=min&&productList2[i].price<=max &&productList2[i].gia.toLowerCase().indexOf(search) > -1) kq.push(productList2[i]);
         phanTrang(1);
     }
 

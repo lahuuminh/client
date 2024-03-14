@@ -1,18 +1,22 @@
+
 function showDetail(item) {
   document.documentElement.style.overflow = "hidden";
   var infor = item.childNodes; // thông tin sản phẩm
   var img = item.querySelector("img").src; // hình ảnh sản phẩm
   var name = infor[1].textContent; // tên sản phẩm
   var price = infor[2].textContent; // giá sản phẩm
+// console.log(productId); // "1"
   for (var i = 0; i < productList.length; i++) {
-    if (name === productList[i].name) {
+    newurl1=productList[i].listimg[0].url
+      // console.log(productList[i])
+    if (name === productList[i].ten) {
       //phân loại sản phẩm
       var type;
-      if (productList[i].type == 1) {
+      if (productList[i].theloai == 1) {
         type = "Mô hình lẻ";
-      } else if (productList[i].type == 2) {
+      } else if (productList[i].theloai == 2) {
         type = "Mô hình mini";
-      } else if (productList[i].type == 3) {
+      } else if (productList[i].theloai == 3) {
         type = "Mô hình theo bộ";
       } else {
         type = "Cosplay";
@@ -24,28 +28,26 @@ function showDetail(item) {
         "</div>" +
         '<div class="wrapper-flex">' +
         '<div class="left-content">' +
-        '<img  src="' +
-        productList[i].img +
-        '" alt="productList[i] detail"+ width="900px" height="700px" id="main-img" />' +
+        '<img  src="'+newurl1+'" alt="productList[i] detail"+ width="900px" height="700px" id="main-img" />' +
         '<div class="optionMenu">' +
         '<div class="imgOption">' +
         '<img src="' +
-        productList[i].img +
+        newurl1 +
         '" alt="opt" class="imgOpt" />' +
         "</div>" +
         '<div class="imgOption">' +
         '<img src="' +
-        productList[i].img2 +
+        newurl1 +
         '" alt="opt" class="imgOpt" />' +
         "</div>" +
         '<div class="imgOption">' +
         '<img src="' +
-        productList[i].img3 +
+        newurl1 +
         '" alt="opt" class="imgOpt" />' +
         "</div>" +
         '<div class="imgOption">' +
         '<img src="' +
-        productList[i].img4 +
+        newurl1 +
         '" alt="opt" class="imgOpt" />' +
         "</div>" +
         "</div>" +
@@ -63,7 +65,7 @@ function showDetail(item) {
         '<div class="price">' +
         '<span class="header-detail">Giá:</span>' +
         '<span class="value"> ' +
-        productList[i].price +
+        productList[i].gia +
         "đ</span>" +
         "</div>" +
         '<div class="amount">' +
@@ -76,33 +78,48 @@ function showDetail(item) {
         "</div>" +
         "</div>" +
         "</div>";
-      let content = document.getElementsByClassName("itemdetail")[0];
-      content.innerHTML = s;
-      content.style.zIndex = 99;
-      addCloseBehavior(content);
-      addAmountChangeBehavior();
-      addImgSelectBehavior();
-      addCartButtonBehavior(name, price, img, content);
-      break;
+        let content = document.getElementsByClassName("itemdetail")[0];
+        content.innerHTML = s;
+        content.style.zIndex = 99;
+        addCloseBehavior(content);
+        addAmountChangeBehavior();
+        addImgSelectBehavior();
+        addCartButtonBehavior(productList[i].masanpham,name, price, img, content);
+        console.log(productList[i].masanpham)
+        break;
     }
   }
 }
 function showDetail2(item) {
-  console.log(item);
+  fetch('http://localhost:8080/findAllProduct')
+.then(response => {
+  if (!response.ok) {
+    throw new Error('Yêu cầu không thành công');
+  }
+  return response.json(); // Trả về promise
+})
+.then(data => {
+  productList=data;
+  // console.log(productList);
   document.documentElement.style.overflow = "hidden";
   var img = item.querySelector(".product-img img").src;
   var name = item.querySelector(".product-content .name-product").textContent;
   var price = item.querySelector(".product-content .price-product").textContent;
+  console.log(price);
+  var productId = item.dataset.id;
   price = price.replace("Giá:", "");
   for (var i = 0; i < productList.length; i++) {
-    if (name === productList[i].name) {
+      // console.log(productList[i])
+      newurl1=productList[i].listimg[0].url
+    if (name === productList[i].ten) {
+      console.log(1)
       //phân loại sản phẩm
       var type;
-      if (productList[i].type == 1) {
+      if (productList[i].theloai == 1) {
         type = "Mô hình lẻ";
-      } else if (productList[i].type == 2) {
+      } else if (productList[i].theloai == 2) {
         type = "Mô hình mini";
-      } else if (productList[i].type == 3) {
+      } else if (productList[i].theloai == 3) {
         type = "Mô hình theo bộ";
       } else {
         type = "Cosplay";
@@ -115,27 +132,27 @@ function showDetail2(item) {
         '<div class="wrapper-flex">' +
         '<div class="left-content">' +
         '<img  src="' +
-        productList[i].img +
+        newurl1 +
         '" alt="productList[i] detail"+ width="900px" height="700px" id="main-img" />' +
         '<div class="optionMenu">' +
         '<div class="imgOption">' +
         '<img src="' +
-        productList[i].img +
+        newurl1 +
         '" alt="opt" class="imgOpt" />' +
         "</div>" +
         '<div class="imgOption">' +
         '<img src="' +
-        productList[i].img2 +
+        newurl1 +
         '" alt="opt" class="imgOpt" />' +
         "</div>" +
         '<div class="imgOption">' +
         '<img src="' +
-        productList[i].img3 +
+        newurl1 +
         '" alt="opt" class="imgOpt" />' +
         "</div>" +
         '<div class="imgOption">' +
         '<img src="' +
-        productList[i].img4 +
+        newurl1 +
         '" alt="opt" class="imgOpt" />' +
         "</div>" +
         "</div>" +
@@ -172,10 +189,16 @@ function showDetail2(item) {
       addCloseBehavior(content);
       addAmountChangeBehavior();
       addImgSelectBehavior();
-      addCartButtonBehavior(name, price, img, content);
+      addCartButtonBehavior(productId,name, price, img, content);
       break;
-    }
-  }
+    }}
+})
+.catch(error => {
+  console.error('Lỗi:', error);
+});
+  // let positionClick = item.target;
+  // let id_product = positionClick.parentElement.dataset.id;
+  // console.log(item);
 }
 
 function addCloseBehavior(content) {
@@ -227,7 +250,7 @@ function addAmountChangeBehavior() {
   });
 }
 
-function addCartButtonBehavior(name, price, img, content) {
+function addCartButtonBehavior(productId,name, price, img, content) {
   let quantity = document.getElementsByClassName("quantity")[0];
   let cartbtn = document.getElementsByClassName("cart-button")[0];
   cartbtn.addEventListener("mousedown", (e) => {
@@ -239,7 +262,7 @@ function addCartButtonBehavior(name, price, img, content) {
       content.innerHTML = "";
       content.style.zIndex = null;
     }, 490);
-    cartAdd(name, price, parseInt(quantity.value), img); //thêm vào mảng của giỏ hàng
+    cartAdd(productId,name, price, parseInt(quantity.value), img); //thêm vào mảng của giỏ hàng
     for(var i=0;i<productList.length;i++)
     {
       if(productList[i].name === name) productList[i].count+=parseInt(quantity.value);
