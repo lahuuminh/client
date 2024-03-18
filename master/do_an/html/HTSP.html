@@ -231,23 +231,23 @@ displayProduct(productList);
             }
         }
         else max = Infinity;
-        kq= [];
-        if(type!=0)
-        {
-            for(var i = 0;i<productList.length;i++)
-            {
-                if(productList[i].ten.toLowerCase().indexOf(name)>-1&&productList[i].gia>=min&&productList[i].gia<=max&&productList[i].theloai == type)
-                kq.push(productList[i]);
-            }   
-        }
-        else
-        {
-            for(var i = 0;i<productList.length;i++)
-            {
-                if(productList[i].ten.toLowerCase().indexOf(name)>-1&&productList[i].gia>=min&&productList[i].gia<=max)
-                kq.push(productList[i]);
-            }
-        }
+        // kq= [];
+        // if(type!=0)
+        // {
+        //     for(var i = 0;i<productList.length;i++)
+        //     {
+        //         if(productList[i].ten.toLowerCase().indexOf(name)>-1&&productList[i].gia>=min&&productList[i].gia<=max&&productList[i].theloai == type)
+        //         kq.push(productList[i]);
+        //     }   
+        // }
+        // else
+        // {
+        //     for(var i = 0;i<productList.length;i++)
+        //     {
+        //         if(productList[i].ten.toLowerCase().indexOf(name)>-1&&productList[i].gia>=min&&productList[i].gia<=max)
+        //         kq.push(productList[i]);
+        //     }
+        // }
         console.log(kq);
         phanTrang(1);
         closeTKNC();

@@ -221,7 +221,7 @@ nav.navigationbar {
   width: 50%;
   min-width: fit-content;
   height: fit-content;
-  margin: calc(10rem / 16);
+  /* margin: calc(10rem / 16); */
   font-size: 1.5rem;
   font-weight: 900;
   text-align: center;

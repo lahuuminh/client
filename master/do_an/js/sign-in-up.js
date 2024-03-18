@@ -120,7 +120,7 @@ phoneNumber.addEventListener('input', () => {
 //kiểm tra địa chỉ đăng ký
 checkAddress.addEventListener('input', () => {
   var address = checkAddress.value;
-  if (address.length > 256) {
+  if (address.length) {
     addressError.textContent = 'Địa chỉ không hợp lệ';
   } else {
     addressError.textContent = '';
@@ -300,7 +300,7 @@ register.addEventListener('click', async function (e) {
       accountname: accountName,
       password: passWord,
       email: mail,
-      phoneNumber: number,
+      phone: number,
       address: address,
       status: '', // trạng thái đăng nhập
     };
@@ -314,25 +314,23 @@ register.addEventListener('click', async function (e) {
       });
 
       if (!response.ok) {
-        throw new Error(`Lỗi mạng hoặc lỗi HTTP, mã lỗi: ${response.status}`);
+        let data = response.json();
+        throw new Error(data.message);
       }
-      if (response.status === 201) {
-        var alertCustom = document.querySelector('#customalert');
-        alertCustom.style.animation = 'complete 10s';
-        userNameInput.value = '';
-        accountNameInput.value = '';
-        passWordInput[0].value = '';
-        passWordInput[1].value = '';
-        checkMail.value = '';
-        phoneNumber.value = '';
-        checkAddress.value = '';
-      } else {
-        alert('Tên đăng nhập đã tồn tại');
-        accountNameInput.value = '';
-      }
+
+      var alertCustom = document.querySelector('#customalert');
+      alertCustom.style.animation = 'complete 10s';
+      userNameInput.value = '';
+      accountNameInput.value = '';
+      passWordInput[0].value = '';
+      passWordInput[1].value = '';
+      checkMail.value = '';
+      phoneNumber.value = '';
+      checkAddress.value = '';
+
+      accountNameInput.value = '';
     } catch (error) {
-      console.error('Xảy ra lỗi khi gửi yêu cầu:', error);
-      throw error; // Re-throw the error for further handling (optional)
+      alert(error.message);
     }
     // addUser(userName, accountName, passWord, mail, number, address);
     // xóa thông tin đã nhập lúc đăng ký thành công
@@ -406,7 +404,8 @@ function setCurrentUser(
   phonenumber,
   address,
   status,
-  role
+  role,
+  user_id
 ) {
   var currentUser = {
     userName: username,
@@ -417,7 +416,9 @@ function setCurrentUser(
     address: address,
     status: status,
     role: role,
+    user_id: user_id,
   };
+  console.log(currentUser);
   localStorage.setItem('currentUser', JSON.stringify(currentUser));
 }
 // setCurrentUser("","","","","","",true);
@@ -435,39 +436,39 @@ loginButton.addEventListener('click', async (e) => {
       },
       body: JSON.stringify({ accountname: username }),
     });
-    if (response.status === 404) {
-      alert('vui lòng kiểm tra tài khoản hoặc mật khẩu');
-    }
+
     if (!response.ok) {
-      let data = response.json();
+      let data = await response.json();
+      console.log(data);
       throw new Error(data.message);
     }
-    if (response.status === 200) {
-      currentUser = await response.json();
-      console.log(currentUser);
-      if (currentUser.password == passWordLogin.value) {
-        console.log(currentUser.role);
-        setCurrentUser(
-          currentUser.username,
-          currentUser.accountname,
-          currentUser.password,
-          currentUser.email,
-          currentUser.phone,
-          currentUser.address,
-          currentUser.status,
-          currentUser.role
-        );
-        onLoginSuccess(JSON.parse(localStorage.getItem('currentUser')));
-        location.reload();
-        accountNameLogin.value = '';
-        passWordLogin.value = '';
-      } else {
-        alert('vui lòng kiểm tra tài khoản hoặc mật khẩu');
-      }
+
+    currentUser = await response.json();
+    console.log(currentUser);
+    if (currentUser.password == passWordLogin.value) {
+      console.log(currentUser.role);
+      setCurrentUser(
+        currentUser.username,
+        currentUser.accountname,
+        currentUser.password,
+        currentUser.email,
+        currentUser.phone,
+        currentUser.address,
+        currentUser.status,
+        currentUser.role,
+        currentUser.user_id
+      );
+      // onLoginSuccess(JSON.parse(localStorage.getItem('currentUser')));
+      location.reload();
+      accountNameLogin.value = '';
+      passWordLogin.value = '';
+    } else {
+      throw new Error('Mật khẩu không đúng');
     }
   } catch (error) {
-    console.error('Xảy ra lỗi khi gửi yêu cầu:', error);
-    throw error; // Re-throw the error for further handling (optional)
+    alert(error);
+    console.log(error);
+    // alert(error);
   }
 
   // for (i = 0; i < userList.length; i++) {
@@ -495,14 +496,19 @@ loginButton.addEventListener('click', async (e) => {
   // }
 });
 // Khi đăng nhập thành công
-var currentUserLogged = JSON.parse(localStorage.getItem('currentUser'));
+let currentUserLogged = localStorage.getItem('currentUser');
+console.log(currentUserLogged);
 if (currentUserLogged) {
   onLoginSuccess(currentUserLogged);
 }
 function onLoginSuccess(user) {
-  if (user && user.status) {
+  user = JSON.parse(user);
+
+  if (user) {
+    console.log(1);
     changeOnLoginSuccess();
-    if (currentUserLogged.role === 'admin') {
+    if (user.role === 'admin') {
+      console.log('admin');
       adminButton.style.display = 'initial';
     }
   }
