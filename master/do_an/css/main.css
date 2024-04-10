@@ -29,7 +29,18 @@ img {
 #header {
   height: 120px;
   width: 100%;
-  background-image: linear-gradient(to left, #BDBBBE 100%, #9D9EA3 100%), radial-gradient(88% 271%, rgba(255, 255, 255, 0.25) 0%, rgba(254, 254, 254, 0.25) 1%, rgba(0, 0, 0, 0.25) 100%), radial-gradient(50% 100%, rgba(255, 255, 255, 0.30) 0%, rgba(0, 0, 0, 0.30) 100%);
+  background-image: linear-gradient(to left, #bdbbbe 100%, #9d9ea3 100%),
+    radial-gradient(
+      88% 271%,
+      rgba(255, 255, 255, 0.25) 0%,
+      rgba(254, 254, 254, 0.25) 1%,
+      rgba(0, 0, 0, 0.25) 100%
+    ),
+    radial-gradient(
+      50% 100%,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(0, 0, 0, 0.3) 100%
+    );
   background-blend-mode: normal, lighten, soft-light;
   display: flex;
 }
@@ -106,6 +117,12 @@ img {
 }
 
 #admin {
+  font-size: 25px;
+  margin-right: 20px;
+  float: right;
+  display: none;
+}
+#admin1 {
   font-size: 25px;
   margin-right: 20px;
   float: right;
@@ -207,7 +224,7 @@ img {
   width: 100px;
   position: relative;
   border-radius: 25px;
-  cursor: pointer
+  cursor: pointer;
 }
 
 .btn_no:disabled {
@@ -439,7 +456,7 @@ img {
   text-align: center;
 }
 
-#search input[type=text] {
+#search input[type='text'] {
   width: 300px;
   height: 35px;
   border-radius: 25px;
@@ -450,14 +467,13 @@ img {
 
 #search button {
   position: relative;
-  bottom: 10px
+  bottom: 10px;
 }
 
 #search button img {
   height: 30px;
   width: 30px;
   position: relative;
-
 }
 
 #menu_label {
@@ -504,7 +520,7 @@ img {
 .banner_fl img {
   width: 100%;
   height: 550px;
-  transition: transform .2s
+  transition: transform 0.2s;
 }
 
 .banner_fl img:hover {
@@ -553,7 +569,7 @@ img {
   height: 250px;
   position: relative;
   left: calc(50% - 125px);
-  transition: transform .2s;
+  transition: transform 0.2s;
 }
 
 .promo_img:hover {
@@ -583,7 +599,7 @@ img {
 }
 
 .img_service {
-  height: 70px
+  height: 70px;
 }
 
 .link_service {
@@ -618,7 +634,7 @@ img {
 #serv1-tb #serv1-title {
   text-align: center;
   font-size: 30px;
-  margin-top: 20px
+  margin-top: 20px;
 }
 
 #serv1-banner {
@@ -657,7 +673,7 @@ img {
 
 .serv1-para {
   text-align: justify;
-  margin: 20px
+  margin: 20px;
 }
 
 @keyframes change-color {
@@ -666,7 +682,7 @@ img {
   }
 
   25% {
-    color: aquamarine
+    color: aquamarine;
   }
 
   50% {
@@ -684,21 +700,21 @@ img {
 
 @keyframes serv1-in {
   from {
-    top: -200%
+    top: -200%;
   }
 
   to {
-    top: 50px
+    top: 50px;
   }
 }
 
 @keyframes serv1-out {
   from {
-    top: 50px
+    top: 50px;
   }
 
   to {
-    top: -200%
+    top: -200%;
   }
 }
 
@@ -726,11 +742,22 @@ img {
 .infor_container {
   display: flex;
   z-index: -1;
-  background-image: linear-gradient(to left, #BDBBBE 100%, #9D9EA3 100%), radial-gradient(88% 271%, rgba(255, 255, 255, 0.25) 0%, rgba(254, 254, 254, 0.25) 1%, rgba(0, 0, 0, 0.25) 100%), radial-gradient(50% 100%, rgba(255, 255, 255, 0.30) 0%, rgba(0, 0, 0, 0.30) 100%);
+  background-image: linear-gradient(to left, #bdbbbe 100%, #9d9ea3 100%),
+    radial-gradient(
+      88% 271%,
+      rgba(255, 255, 255, 0.25) 0%,
+      rgba(254, 254, 254, 0.25) 1%,
+      rgba(0, 0, 0, 0.25) 100%
+    ),
+    radial-gradient(
+      50% 100%,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(0, 0, 0, 0.3) 100%
+    );
   background-blend-mode: normal, lighten, soft-light;
 }
 
-.infor_container>div {
+.infor_container > div {
   font-size: 30px;
 }
 
@@ -830,7 +857,7 @@ img {
   cursor: pointer;
 }
 
-.closebutton>.close-button {
+.closebutton > .close-button {
   position: absolute;
   right: 10px;
   top: 10px;
@@ -843,7 +870,7 @@ img {
   caret-color: transparent;
 }
 
-.closebutton>.close-button:hover {
+.closebutton > .close-button:hover {
   background-color: rgba(104, 13, 13, 19);
   color: white;
 }
@@ -864,7 +891,7 @@ img {
   align-items: center;
 }
 
-.left-content>img {
+.left-content > img {
   width: max-content;
   aspect-ratio: 9/7;
   margin-bottom: 2em;
@@ -890,7 +917,7 @@ img {
 }
 
 .imgOptionSelect::before {
-  content: "";
+  content: '';
   position: absolute;
   width: auto;
   height: auto;
@@ -911,7 +938,7 @@ img {
   margin-left: 10px;
 }
 
-.right-content>* {
+.right-content > * {
   margin-bottom: 1rem;
 }
 
@@ -1011,7 +1038,6 @@ img {
 
 /* giao diện nhỏ hơn */
 @media screen and (max-width: 900px) {
-
   /* chỉnh sửa kích cỡ banner */
   .banner_fl img {
     height: 300px;
@@ -1072,7 +1098,7 @@ img {
     font-size: 20px;
   }
 
-  #search input[type=text] {
+  #search input[type='text'] {
     width: 200px;
   }
 
@@ -1149,7 +1175,7 @@ img {
     width: 100%;
   }
 
-  .left-content>img {
+  .left-content > img {
     max-width: 100%;
     margin-bottom: 2em;
   }
@@ -1243,7 +1269,6 @@ img {
 
 /* giao diện nhỏ hơn */
 @media screen and (max-width: 400px) {
-
   /* chỉnh sửa kích cỡ banner */
   .banner_fl img {
     height: 300px;
@@ -1283,12 +1308,9 @@ img {
   .infor_container p {
     font-size: 15px;
   }
-
-
 }
 
 @media screen and (max-width: 600px) {
-
   .left-content,
   .right-content {
     margin: 0;

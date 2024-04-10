@@ -228,8 +228,22 @@ nav.navigationbar {
   cursor: pointer;
   caret-color: transparent;
 }
-
+.donHang .HanhDong a {
+  width: 50%;
+  min-width: fit-content;
+  height: fit-content;
+  /* margin: calc(10rem / 16); */
+  font-size: 1.5rem;
+  font-weight: 900;
+  text-align: center;
+  cursor: pointer;
+  caret-color: transparent;
+  color: black;
+}
 .donHang .HanhDong div:hover.accept {
+  color: lime;
+}
+.donHang .HanhDong div:hover.in {
   color: lime;
 }
 
@@ -612,4 +626,66 @@ form.otherSearch :is(input, select) {
     font-size: 1rem;
     margin: 0;
   }
+}
+
+/* Thiết lập kích thước và màu sắc */
+.custom-select {
+  width: 140px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* Thiết lập style khi hover */
+.custom-select:hover {
+  border-color: #999;
+}
+
+/* Thiết lập style khi focus */
+.custom-select:focus {
+  border-color: #333;
+}
+
+/* Thiết lập style cho các option */
+.custom-select option {
+  background-color: #fff;
+  color: #333;
+  font-size: 16px;
+}
+
+/* Thiết lập style khi hover trên option */
+.custom-select option:hover {
+  background-color: #f4f4f4;
+}
+
+/* Thiết lập kích thước và màu sắc */
+.custom-select-update {
+  width: 140px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* Thiết lập style khi hover */
+.custom-select-update:hover {
+  border-color: #999;
+}
+
+/* Thiết lập style khi focus */
+.custom-select-update:focus {
+  border-color: #333;
+}
+
+/* Thiết lập style cho các option */
+.custom-select-update option {
+  background-color: #fff;
+  color: #333;
+  font-size: 16px;
+}
+
+/* Thiết lập style khi hover trên option */
+.custom-select-update option:hover {
+  background-color: #f4f4f4;
 }

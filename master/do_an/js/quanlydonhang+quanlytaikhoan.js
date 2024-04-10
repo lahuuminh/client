@@ -4,14 +4,29 @@ let host = 'http://localhost:8080';
 //   ? JSON.parse(localStorage.getItem('userList'))
 //   : [];
 let userList;
+let nccList;
 // fetch data user list
-
+let user = JSON.parse(localStorage.getItem('currentUser'));
 async function fetchUser() {
   const response = await fetch(host + '/user/all'); // Thay thế URL bằng URL thực tế của server bạn muốn lấy dữ liệu từ
   userList = await response.json();
+  console.log(userList);
+  userList = userList.filter((u) => {
+    return u.role === 'nguoimua';
+  });
+  console.log(userList);
   return userList;
 }
 fetchUser();
+console.log(userList);
+async function fetchNCC() {
+  const response = await fetch(host + '/nhacungcap/all'); // Thay thế URL bằng URL thực tế của server bạn muốn lấy dữ liệu từ
+  nccList = await response.json();
+  console.log(nccList);
+  return nccList;
+}
+
+fetchNCC();
 let orderList;
 // let orderList = localStorage.getItem('orderList')
 //   ? JSON.parse(localStorage.getItem('orderList'))
@@ -22,10 +37,16 @@ async function fetchOrderList() {
   console.log(orderList);
 }
 
-var productList = localStorage.getItem('productList')
-  ? JSON.parse(localStorage.getItem('productList'))
-  : [];
+var productList;
+async function fetchSP() {
+  const response = await fetch(host + '/findAllProduct'); // Thay thế URL bằng URL thực tế của server bạn muốn lấy dữ liệu từ
+  productList = await response.json();
+  console.log(productList);
+  return productList;
+}
+fetchSP();
 var listTKSP = JSON.parse(localStorage.getItem('listTKSP'));
+console.log(productList);
 let content = document.getElementById('mngContent');
 // console.log(listTKSP);
 // let display_product = document.getElementsByClassName("display-product")[0];
@@ -44,22 +65,56 @@ window.onload = () => {
         window.getComputedStyle(leftMenu).display == 'block' ? 'none' : 'block';
     }
   });
-
+  function checkRole(user, role) {
+    if (role === 'nguoiquanly') {
+      if (user.role === 'nguoiquanly') {
+        return true;
+      }
+    } else if (role === 'nguoiban') {
+      if (user.role === 'nguoiquanly' || user.role === 'nguoiban') {
+        return true;
+      }
+    } else if (role === 'nguoiquanlykho') {
+      if (user.role === 'nguoiquanly' || user.role === 'nguoiquanlykho') {
+        return true;
+      }
+    }
+    return false;
+  }
   let tkDonHang = document.getElementById('tkDonHang');
   tkDonHang.addEventListener('click', async () => {
-    await fetchOrderList();
-    displayOrderManagement(orderList);
+    if (checkRole(user, 'nguoiban')) {
+      await fetchOrderList();
+      displayOrderManagement(orderList);
+    } else {
+      alert('Người dùng không có quyền này');
+    }
   });
 
   let qlTaiKhoan = document.getElementById('userManagement');
   qlTaiKhoan.addEventListener('click', () => {
-    console.log(1);
-    displayUserManagement(userList);
+    if (checkRole(user, 'nguoiban')) {
+      displayUserManagement(userList);
+    } else {
+      alert('Người dùng không có quyền này');
+    }
   });
 
   let QLSP = document.getElementById('QLSP');
   QLSP.addEventListener('click', () => {
-    displayQLSP(productList);
+    if (checkRole(user, 'nguoiquanlykho')) {
+      displayQLSP(productList);
+    } else {
+      alert('Người dùng không có quyền này');
+    }
+  });
+  let QLNCC = document.getElementById('QLNCC');
+  QLNCC.addEventListener('click', () => {
+    if (checkRole(user, 'nguoiquanlykho')) {
+      displayQLNCC(nccList);
+    } else {
+      alert('Người dùng không có quyền này');
+    }
   });
   let TKSP = document.getElementById('TKSP');
   TKSP.addEventListener('click', () => {
@@ -72,7 +127,197 @@ window.onload = () => {
     displayTKSP(productList);
   });
 };
+function closeTKNC() {
+  var c = document.getElementById('TKNCkhung');
+  c.innerHTML = '';
+}
+function searchTKNC() {
+  var name = document.getElementById('inputNameTKNC').value.toLowerCase();
+  var type = document.getElementById('inputTypeTKNC').value;
+  var min = document.getElementById('inputMinTKNC').value;
+  var max = document.getElementById('inputMaxTKNC').value;
+  var checkPrice = /^[0-9]{1,15}$/;
+  console.log(type);
+  if (min !== '') {
+    if (!checkPrice.test(min)) {
+      window.alert('Sai min');
+      return;
+    }
+  }
+  if (max !== '') {
+    if (!checkPrice.test(max)) {
+      window.alert('Sai max');
+      return;
+    }
+  }
+  // kq= [];
+  // if(type!=0)
+  // {
+  //     for(var i = 0;i<productList.length;i++)
+  //     {
+  //         if(productList[i].ten.toLowerCase().indexOf(name)>-1&&productList[i].gia>=min&&productList[i].gia<=max&&productList[i].theloai == type)
+  //         kq.push(productList[i]);
+  //     }
+  // }
+  // else
+  // {
+  //     for(var i = 0;i<productList.length;i++)
+  //     {
+  //         if(productList[i].ten.toLowerCase().indexOf(name)>-1&&productList[i].gia>=min&&productList[i].gia<=max)
+  //         kq.push(productList[i]);
+  //     }
+  // }
 
+  const apiUrl = 'http://localhost:8080/getsanpham';
+  const queryParams = { ten: name, giamin: min, giamax: max, loai: type };
+
+  // Xây dựng URL với các query parameters
+  const urlWithParams = new URL(apiUrl);
+  Object.keys(queryParams).forEach((key) =>
+    urlWithParams.searchParams.append(key, queryParams[key])
+  );
+  console.log(urlWithParams);
+  // Gửi yêu cầu GET
+  fetch(urlWithParams)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      // Xử lý dữ liệu nhận được từ API
+      displayQLSP(data);
+      console.log(data);
+    })
+    .catch((error) => {
+      console.error('There was a problem with your fetch operation:', error);
+    });
+
+  // console.log(kq);
+  // phanTrang(1);
+  // closeTKNC();
+}
+function searchTKNCNCC() {
+  var name = document.getElementById('inputNameTKNC').value.toLowerCase();
+  var email = document.getElementById('inputEmailTKNC').value.toLowerCase();
+  var diachi = document.getElementById('inputDiaChiTKNC').value.toLowerCase();
+  console.log(name, email, diachi);
+  if (name == '' && email == '' && diachi == '') {
+    alert('nhập ít nhất một thông tin muốn tìm kiếm');
+    return;
+  }
+  // kq= [];
+  // if(type!=0)
+  // {
+  //     for(var i = 0;i<productList.length;i++)
+  //     {
+  //         if(productList[i].ten.toLowerCase().indexOf(name)>-1&&productList[i].gia>=min&&productList[i].gia<=max&&productList[i].theloai == type)
+  //         kq.push(productList[i]);
+  //     }
+  // }
+  // else
+  // {
+  //     for(var i = 0;i<productList.length;i++)
+  //     {
+  //         if(productList[i].ten.toLowerCase().indexOf(name)>-1&&productList[i].gia>=min&&productList[i].gia<=max)
+  //         kq.push(productList[i]);
+  //     }
+  // }
+
+  const apiUrl = 'http://localhost:8080/nhacungcap/getnhacungcap';
+  const queryParams = { ten: name, email: email, diachi: diachi };
+
+  // Xây dựng URL với các query parameters
+  const urlWithParams = new URL(apiUrl);
+  Object.keys(queryParams).forEach((key) =>
+    urlWithParams.searchParams.append(key, queryParams[key])
+  );
+  console.log(urlWithParams);
+  // Gửi yêu cầu GET
+  fetch(urlWithParams)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      // Xử lý dữ liệu nhận được từ API
+      displayQLNCC(data);
+      console.log(data);
+    })
+    .catch((error) => {
+      console.error('There was a problem with your fetch operation:', error);
+    });
+
+  // console.log(kq);
+  // phanTrang(1);
+  // closeTKNC();
+}
+
+function openTKNC() {
+  var c = document.getElementById('mngContent');
+
+  let div = document.createElement('div');
+  div.id = 'TKNCkhung';
+  var b = document.createElement('div');
+  b.id = 'TKNC';
+  b.innerHTML = `<h2 style="text-align: center;">Tìm kiếm nâng cao</h2>
+  <div style="display: flex;">
+      <div style="display: block;">
+          <h3 class="h3TKNC">Tên sản phẩm</h3>
+          <input id="inputNameTKNC" style="margin-left: 20px;" type="text" name="" id=""><br>
+      </div>
+      <div style="display: block; margin-left: 80px;">
+          <h3 class="h3TKNC">Loại sản phẩm</h3>
+          <select id="inputTypeTKNC" style="margin-left: 20px;">
+          <option value="0">Tất cả</option>
+          <option value="1">Mô hình lẻ</option>
+          <option value="2">Mô hình chibi</option>
+          <option value="3">Bộ mô hình</option>
+          <option value="4">Cosplay</option>
+          </select>
+      </div>
+  </div>
+  <br>
+  <div style="display: flex; margin-left: 20px;">
+      <h4>Từ</h4> <input id="inputMinTKNC" type="text" placeholder="VNĐ">
+      <h4>Đến</h4> <input id="inputMaxTKNC" style="margin-right: 20px" type="text"placeholder="VNĐ">
+  </div>
+  <br>
+  <button onclick="searchTKNC()" style="float: right;">Tìm kiếm</button>
+  <button onclick="closeTKNC()" style="float: right;">Hủy</button>`;
+  div.appendChild(b);
+  c.appendChild(div);
+}
+function openTKNCNCC() {
+  var c = document.getElementById('mngContent');
+
+  let div = document.createElement('div');
+  div.id = 'TKNCkhung';
+  var b = document.createElement('div');
+  b.id = 'TKNC';
+  b.style = 'padding:0 20px';
+  b.innerHTML = `<h2 style="text-align: center; margin-bottom:10px">Tìm kiếm nâng cao</h2>
+  <div style="display: flex;">
+      <div style="display: block;">
+          <h3 class="h3TKNC">Tên nhà cung cấp</h3>
+          <input id="inputNameTKNC" style="margin-left: 20px;" type="text" name="" id=""><br>
+          <h3 class="h3TKNC">Email nhà cung cấp</h3>
+          <input id="inputEmailTKNC" style="margin-left: 20px;" type="text" name="" id=""><br>
+          <h3 class="h3TKNC">Địa chỉ  nhà cung cấp</h3>
+          <input id="inputDiaChiTKNC" style="margin-left: 20px;" type="text" name="" id=""><br>
+      </div>
+  </div>
+  <br>
+  
+  <br>
+  <button onclick="searchTKNCNCC()" style="float: right; margin-left:5px">Tìm kiếm</button>
+  <button onclick="closeTKNC()" style="float: right;">Hủy</button>`;
+  div.appendChild(b);
+  c.appendChild(div);
+}
 function closeOrderManagement() {
   content.style.display = 'none';
   location.reload();
@@ -100,15 +345,15 @@ function displayOrderManagement(orderList) {
     '<input type="date" name="ngayXaNhat" id="toDate">' +
     '<button class="applySearch" id="dateSearchBtn">Search</button>' +
     '</form>' +
-    '<form action="" id="otherSearch" class="otherSearch">' +
-    '<select name="searchyype" id="searchType">' +
-    '<option value="1">Tìm theo mã đơn</option>' +
-    '<option value="2">Tìm theo tên khách hàng</option>' +
-    '<option value="3">Tim theo trạng thái</option>' +
-    '</select>' +
-    '<input type="text" id="inputValue">' +
-    '<button class="applySearch" id="typeSearchBtn">Search</button>' +
-    '</form>' +
+    // '<form action="" id="otherSearch" class="otherSearch">' +
+    // '<select name="searchyype" id="searchType">' +
+    // '<option value="1">Tìm theo mã đơn</option>' +
+    // '<option value="2">Tìm theo tên khách hàng</option>' +
+    // '<option value="3">Tim theo trạng thái</option>' +
+    // '</select>' +
+    // '<input type="text" id="inputValue">' +
+    // '<button class="applySearch" id="typeSearchBtn">Search</button>' +
+    // '</form>' +
     '</div>' +
     '</div>';
   let searchBtn = document.getElementsByClassName('applySearch');
@@ -163,12 +408,26 @@ function loadOrderList(orderElm, orderList) {
       '<div class="HanhDong">' +
       '<div class="accept">Y</div>' +
       '<div class="deny">X</div>' +
+      '<div class="in">In</div>' +
       '</div>';
     orderElm.appendChild(li);
     let accept = li.getElementsByClassName('accept')[0];
     let deny = li.getElementsByClassName('deny')[0];
     let status = li.getElementsByClassName('Trangthai')[0];
+    let In = li.getElementsByClassName('in')[0];
 
+    In.addEventListener('click', () => {
+      if (status.innerHTML.localeCompare('Wating') === 0) {
+        alert('Không thể in hóa đơn của đơn hàng đang chờ ');
+        return;
+      }
+      if (status.innerHTML.localeCompare('Da Huy') === 0) {
+        alert('khong the in don hang da huy');
+        return;
+      }
+      // Chuyển hướng người dùng sang một URL mới
+      window.location.href = `http://127.0.0.1:5501/master/do_an/html/hoadon.html?ma=${orderList[i].mahoadon}`;
+    });
     accept.addEventListener('click', async () => {
       if (status.innerHTML.localeCompare('Da Giao Hang') === 0) {
         return;
@@ -818,19 +1077,22 @@ function searchQLSP() {
   displayQLSP(productListHai);
 }
 
-function deleteQLSP(id) {
-  var DLconfirm = confirm('Bạn chắc không');
-  var after = [];
-  if (DLconfirm == 1) {
-    for (var i = 0; i < productList.length; i++)
-      if (productList[i].id !== id) after.push(productList[i]);
-    productList = after;
-    after = [];
-    for (var i = 0; i < productListHai.length; i++)
-      if (productListHai[i].id !== id) after.push(productListHai[i]);
-    productListHai = after;
-    displayQLSP(productListHai);
-    saveProductList();
+async function deleteQLSP(id) {
+  let ans = confirm('Ban chac chan muon xoa nha cung cap?');
+  if (ans == 1) {
+    console.log(user.user_id);
+    let response = await fetch(host + '/sanpham/' + id, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json', // Adjust content type if needed
+        // Add any other headers if needed
+      },
+    });
+    if (response.ok) {
+      let data = await response.json();
+      let list = await fetchSP();
+      displayQLSP(list);
+    }
   }
 }
 
@@ -883,97 +1145,149 @@ function editQLSP(id) {
 
   var typeinput = document.getElementsByName('type');
   var type;
-  var flag = 0;
   for (var i = 0; i < typeinput.length; i++)
-    if (typeinput[i].checked) {
-      type = typeinput[i].value;
-      flag = 1;
-      break;
-    }
-  if (flag == 0) type = '';
+    if (typeinput[i].value !== '') type = typeinput[i].value;
+  var soluong = document.getElementById('soluong').value;
   var price = document.getElementById('priceQLSP').value;
-  var img = document.getElementById('imgQLSP');
-  var img2 = document.getElementById('img2QLSP');
-  var img3 = document.getElementById('img3QLSP');
-  var img4 = document.getElementById('img4QLSP');
-  var imgg = document.getElementById('imgQLSP').value;
-  var imgg2 = document.getElementById('img2QLSP').value;
-  var imgg3 = document.getElementById('img3QLSP').value;
-  var imgg4 = document.getElementById('img4QLSP').value;
-
-  var checkPrice = /^[0-9]{1,15}$/;
-  if (price !== '')
-    if (!checkPrice.test(price)) {
-      window.alert('Sai giá');
-      return;
-    }
-
-  let k = 0;
-  for (var i = 0; i < productList.length; i++) {
-    if (productList[i].id == id) {
-      if (name !== '') productList[i].name = name;
-      if (type !== '') productList[i].type = type;
-      if (price !== '') productList[i].price = price;
-      k = i;
-      break;
-    }
-  }
-  var promises = [];
-
-  if (imgg !== '' && img.files[0])
-    promises.push(
-      blobToBase64(img.files[0]).then((res) => {
-        return resize(res, 500, 300).then((res2) => {
-          img = res2;
-          productList[k].img = res2;
+  let newsp = {
+    ten: name,
+    theloai: type,
+    gia: price,
+    soluong: soluong,
+    masanpham: id,
+  };
+  console.log(newsp);
+  let requestOptions = {
+    method: 'PUT', // hoặc 'PATCH' nếu server hỗ trợ
+    headers: {
+      'Content-Type': 'application/json',
+      // Thêm các header khác nếu cần thiết
+    },
+    body: JSON.stringify(newsp), // Chuyển đổi object thành chuỗi JSON để gửi đi
+  };
+  fetch(host + '/sanpham', requestOptions)
+    .then(async (response) => {
+      let data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message);
+      }
+      // Xử lý phản hồi nếu cần thiết
+      return data;
+    })
+    .then((data) => {
+      console.log('Dữ liệu được trả về từ server:', data);
+      fetchSP()
+        .then(() => {
+          displayQLSP(productList);
+        })
+        .catch((e) => {
+          console.log(e);
         });
-      })
-    );
-
-  if (imgg2 !== '' && img2.files[0])
-    promises.push(
-      blobToBase64(img2.files[0]).then((res) => {
-        return resize(res, 500, 300).then((res2) => {
-          img2 = res2;
-          productList[k].img2 = res2;
-        });
-      })
-    );
-
-  if (imgg3 !== '' && img3.files[0])
-    promises.push(
-      blobToBase64(img3.files[0]).then((res) => {
-        return resize(res, 500, 300).then((res2) => {
-          img3 = res2;
-          productList[k].img3 = res2;
-        });
-      })
-    );
-
-  if (imgg4 !== '' && img4.files[0])
-    promises.push(
-      blobToBase64(img4.files[0]).then((res) => {
-        return resize(res, 500, 300).then((res2) => {
-          img4 = res2;
-          productList[k].img4 = res2;
-        });
-      })
-    );
-
-  // Chờ tất cả các promises hoàn thành
-  Promise.all(promises)
-    .then(() => {
-      // Sau khi tất cả đã hoàn thành, lưu vào localStorage
-      saveProductList();
-      productListHai = productList;
-      displayQLSP(productList);
-      closeEditQLSP();
     })
     .catch((error) => {
-      console.error('Error during image processing:', error);
+      console.error('There was a problem with your fetch operation:', error);
     });
+  // var name = document.getElementById('nameQLSP').value;
+
+  // var typeinput = document.getElementsByName('type');
+  // var type;
+  // var flag = 0;
+  // for (var i = 0; i < typeinput.length; i++)
+  //   if (typeinput[i].checked) {
+  //     type = typeinput[i].value;
+  //     flag = 1;
+  //     break;
+  //   }
+  // if (flag == 0) type = '';
+  // var price = document.getElementById('priceQLSP').value;
+  // var img = document.getElementById('imgQLSP');
+  // var img2 = document.getElementById('img2QLSP');
+  // var img3 = document.getElementById('img3QLSP');
+  // var img4 = document.getElementById('img4QLSP');
+  // var imgg = document.getElementById('imgQLSP').value;
+  // var imgg2 = document.getElementById('img2QLSP').value;
+  // var imgg3 = document.getElementById('img3QLSP').value;
+  // var imgg4 = document.getElementById('img4QLSP').value;
+
+  // var checkPrice = /^[0-9]{1,15}$/;
+  // if (price !== '')
+  //   if (!checkPrice.test(price)) {
+  //     window.alert('Sai giá');
+  //     return;
+  //   }
+
+  // let k = 0;
+  // for (var i = 0; i < productList.length; i++) {
+  //   if (productList[i].id == id) {
+  //     if (name !== '') productList[i].name = name;
+  //     if (type !== '') productList[i].type = type;
+  //     if (price !== '') productList[i].price = price;
+  //     k = i;
+  //     break;
+  //   }
+  // }
+  // var promises = [];
+
+  // if (imgg !== '' && img.files[0])
+  //   promises.push(
+  //     blobToBase64(img.files[0]).then((res) => {
+  //       return resize(res, 500, 300).then((res2) => {
+  //         img = res2;
+  //         productList[k].img = res2;
+  //       });
+  //     })
+  //   );
+
+  // if (imgg2 !== '' && img2.files[0])
+  //   promises.push(
+  //     blobToBase64(img2.files[0]).then((res) => {
+  //       return resize(res, 500, 300).then((res2) => {
+  //         img2 = res2;
+  //         productList[k].img2 = res2;
+  //       });
+  //     })
+  //   );
+
+  // if (imgg3 !== '' && img3.files[0])
+  //   promises.push(
+  //     blobToBase64(img3.files[0]).then((res) => {
+  //       return resize(res, 500, 300).then((res2) => {
+  //         img3 = res2;
+  //         productList[k].img3 = res2;
+  //       });
+  //     })
+  //   );
+
+  // if (imgg4 !== '' && img4.files[0])
+  //   promises.push(
+  //     blobToBase64(img4.files[0]).then((res) => {
+  //       return resize(res, 500, 300).then((res2) => {
+  //         img4 = res2;
+  //         productList[k].img4 = res2;
+  //       });
+  //     })
+  //   );
+
+  // // Chờ tất cả các promises hoàn thành
+  // Promise.all(promises)
+  //   .then(() => {
+  //     // Sau khi tất cả đã hoàn thành, lưu vào localStorage
+  //     saveProductList();
+  //     productListHai = productList;
+  //     displayQLSP(productList);
+  //     closeEditQLSP();
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error during image processing:', error);
+  //   });
 }
-function openEditQLSP(id) {
+async function openEditQLSP(id) {
+  const response = await fetch(host + '/sanpham/' + id);
+  let sanpham;
+  if (response.ok) {
+    sanpham = await response.json();
+  }
+  console.log(sanpham);
   var pa = document.getElementsByClassName('addEditQLSP')[0];
   pa.innerHTML = '';
   var form = document.createElement('div');
@@ -983,6 +1297,8 @@ function openEditQLSP(id) {
     '<label for="">Tên sản phẩm</label><br>' +
     '<input id="nameQLSP" type="text"><br>' +
     '<p class="ghiLai" id="oldName"></p>' +
+    '<label for="">Số lượng sản phẩm</label><br>' +
+    '<input id="soluong" type="number"><br>' +
     '<label for="">Loại</label><br>' +
     `<div style="display: flex;">` +
     '<input type="radio" name="type" value="1">1<br>' +
@@ -1010,23 +1326,114 @@ function openEditQLSP(id) {
     ')" style="float: right;" >Submit</button>' +
     '<button onclick="closeEditQLSP()" style="float: right;" >Cancel</button>';
   pa.appendChild(form);
-  for (var i = 0; i < productList.length; i++)
-    if (productList[i].id == id) {
-      var oldName = document.getElementById('oldName');
-      var oldType = document.getElementById('oldType');
-      var oldPrice = document.getElementById('oldPrice');
-      var oldImg = document.getElementById('oldImg');
-      var oldImg2 = document.getElementById('oldImg2');
-      var oldImg3 = document.getElementById('oldImg3');
-      var oldImg4 = document.getElementById('oldImg4');
-      oldName.innerHTML = 'Tên cũ: ' + productList[i].name;
-      oldType.innerHTML = 'Loại cũ: ' + productList[i].type;
-      oldPrice.innerHTML = 'Giá cũ: ' + productList[i].price;
-      oldImg.src = productList[i].img;
-      oldImg2.src = productList[i].img2;
-      oldImg3.src = productList[i].img3;
-      oldImg4.src = productList[i].img4;
-    }
+
+  var oldName = document.getElementById('oldName');
+  var oldType = document.getElementById('oldType');
+  var oldPrice = document.getElementById('oldPrice');
+  var oldImg = document.getElementById('oldImg');
+  var oldImg2 = document.getElementById('oldImg2');
+  var oldImg3 = document.getElementById('oldImg3');
+  var oldImg4 = document.getElementById('oldImg4');
+  var ten = document.getElementById('nameQLSP');
+  ten.value = sanpham.ten;
+  var soluong = document.getElementById('soluong');
+  soluong.value = sanpham.soluong;
+  var typeinput = document.getElementsByName('type');
+  var type;
+  for (var i = 0; i < typeinput.length; i++)
+    if (typeinput[i].value == sanpham.theloai) typeinput[i].checked = true;
+  var gia = document.getElementById('priceQLSP');
+  gia.value = sanpham.gia;
+
+  // oldName.innerHTML = 'Tên cũ: ' + productList[i].ten;
+  // oldType.innerHTML = 'Loại cũ: ' + productList[i].theloai;
+  // oldPrice.innerHTML = 'Giá cũ: ' + productList[i].gia;
+  // oldImg.src = sanpham.listimg[0] ? sanpham.listimg[0].url : '';
+  // oldImg2.src = sanpham.listimg[1] ? sanpham.listimg[1].url : '';
+  // oldImg3.src = sanpham.listimg[2] ? sanpham.listimg[2].url : '';
+  // oldImg4.src = sanpham.listimg[3] ? sanpham.listimg[3].url : '';
+}
+async function openEditQLNCC(id) {
+  const response = await fetch(host + '/nhacungcap/' + id);
+  let ncc;
+  if (response.ok) {
+    ncc = await response.json();
+  }
+
+  var pa = document.getElementsByClassName('addEditQLSP')[0];
+  pa.innerHTML = '';
+  var form = document.createElement('div');
+  form.id = 'formEditQLSP';
+  form.innerHTML =
+    '<h3 style="text-align: center;">Sửa nhà cung cấp</h3>' +
+    '<label for="">Tên nhà cung cấp</label><br>' +
+    '<input id="ten" type="text"><br>' +
+    '<label for="">Địa chỉ nhà cung cấp</label><br>' +
+    '<input id="diachi" type="text"><br>' +
+    '<label for="">Email nhà cung cấp</label><br>' +
+    '<input id="email" type="text"><br>' +
+    '<label for="">Số điện thoại nhà cung cấp</label><br>' +
+    '<input id="sodienthoai" type="text"><br>' +
+    '<button onclick="editQLNCC(' +
+    ncc.manhacungcap +
+    ')" style="float: right;" >Submit</button>' +
+    '<button onclick="closeEditQLSP()" style="float: right;" >Cancel</button>';
+  pa.appendChild(form);
+  let ten = document.getElementById('ten');
+  ten.value = ncc.ten;
+  let diachi = document.getElementById('diachi');
+  diachi.value = ncc.diaChi;
+  let email = document.getElementById('email');
+  email.value = ncc.email;
+  let sodienthoai = document.getElementById('sodienthoai');
+  sodienthoai.value = ncc.soDienThoai;
+}
+async function editQLNCC(id) {
+  let ten = document.getElementById('ten').value;
+
+  let diachi = document.getElementById('diachi').value;
+
+  let email = document.getElementById('email').value;
+
+  let sodienthoai = document.getElementById('sodienthoai').value;
+  let newncc = {
+    ten: ten,
+    email: email,
+    diaChi: diachi,
+    soDienThoai: sodienthoai,
+    manhacungcap: id,
+  };
+  console.log(newncc);
+  let requestOptions = {
+    method: 'PUT', // hoặc 'PATCH' nếu server hỗ trợ
+    headers: {
+      'Content-Type': 'application/json',
+      // Thêm các header khác nếu cần thiết
+    },
+    body: JSON.stringify(newncc), // Chuyển đổi object thành chuỗi JSON để gửi đi
+  };
+  fetch(host + '/nhacungcap', requestOptions)
+    .then(async (response) => {
+      let data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message);
+      }
+      // Xử lý phản hồi nếu cần thiết
+      return data;
+    })
+    .then((data) => {
+      console.log('Dữ liệu được trả về từ server:', data);
+      fetchNCC()
+        .then(() => {
+          displayQLNCC(nccList);
+        })
+        .catch(() => {
+          console.log(e);
+        });
+    })
+    .catch((error) => {
+      console.error('There was a problem with your fetch operation:', error);
+    });
 }
 function closeAddQLSP() {
   var close = document.getElementById('formAddQLSP');
@@ -1040,19 +1447,19 @@ function init(product) {
   displayQLSP(productListHai);
   closeAddQLSP();
 }
-function addQLSP() {
+async function addQLSP() {
   var product = {};
-  if (productList.length == 0) {
-    product.id = 1;
-  } else product.id = productList[productList.length - 1].id + 1;
-  product.count = 0;
+  // if (productList.length == 0) {
+  //   product.id = 1;
+  // } else product.id = productList[productList.length - 1].id + 1;
+  // product.count = 0;
   var name = document.getElementById('nameQLSP').value;
 
   var typeinput = document.getElementsByName('type');
   var type;
   for (var i = 0; i < typeinput.length; i++)
     if (typeinput[i].value !== '') type = typeinput[i].value;
-
+  var soluong = document.getElementById('soluong').value;
   var price = document.getElementById('priceQLSP').value;
   var imgg = document.getElementById('imgQLSP').value;
   var imgg2 = document.getElementById('img2QLSP').value;
@@ -1064,65 +1471,162 @@ function addQLSP() {
   var img3 = document.getElementById('img3QLSP');
   var img4 = document.getElementById('img4QLSP');
   var checkPrice = /^[0-9]{1,15}$/;
-
+  console.log(soluong, name, type, price, img, img2, img3, img4);
   if (price !== '')
     if (!checkPrice.test(price)) {
       window.alert('Sai giá');
       return;
     }
+  soluong = parseInt(soluong);
+  console.log(typeof soluong);
   if (
+    typeof soluong === 'number' &&
     name !== '' &&
     type !== '' &&
-    price !== '' &&
-    (imgg !== '' || imgg2 !== '' || imgg3 !== '' || imgg4 !== '')
+    price !== ''
+    // (imgg !== '' || imgg2 !== '' || imgg3 !== '' || imgg4 !== '')
   ) {
     product.name = name;
     product.type = type;
     product.price = price;
     let count = 0;
+    let l = [];
     if (img.files[0])
-      blobToBase64(img.files[0]).then((res) => {
+      await blobToBase64(img.files[0]).then((res) => {
         resize(res, 500, 300).then((res2) => {
           img = res2;
           product.img = res2;
-          if (++count == 4) init(product);
+          let test = {
+            url: res2,
+          };
+          l.push(test);
+          // if (++count == 4) init(product);
         });
       });
     else count++;
 
     if (img2.files[0])
-      blobToBase64(img2.files[0]).then((res) => {
+      await blobToBase64(img2.files[0]).then((res) => {
         resize(res, 500, 300).then((res2) => {
           img2 = res2;
+
           product.img2 = img2;
-          if (++count == 4) init(product);
+
+          let test = {
+            url: res2,
+          };
+          l.push(test);
+          // if (++count == 4) init(product);
         });
       });
     else count++;
     if (img3.files[0])
-      blobToBase64(img3.files[0]).then((res) => {
+      await blobToBase64(img3.files[0]).then((res) => {
         resize(res, 500, 300).then((res2) => {
           img3 = res2;
           product.img3 = img3;
-          if (++count == 4) init(product);
+          let test = {
+            url: res2,
+          };
+          l.push(test);
+          // if (++count == 4) init(product);
         });
       });
     else count++;
 
     if (img4.files[0])
-      blobToBase64(img4.files[0]).then((res) => {
+      await blobToBase64(img4.files[0]).then((res) => {
         resize(res, 500, 300).then((res2) => {
           img4 = res2;
           product.img4 = img4;
-          if (++count == 4) init(product);
+          let test = {
+            url: res2,
+          };
+          l.push(test);
+          // if (++count == 4) init(product);
         });
       });
     else count++;
+    price = parseFloat(price);
+    console.log(l);
+    let newproduct = {
+      ten: name,
+      theloai: type,
+      gia: price,
+      soluong: soluong,
+      listimg: l,
+    };
+
+    console.log(newproduct);
+
+    try {
+      let response = await fetch(host + '/sanpham/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // Adjust content type if needed
+        },
+        body: JSON.stringify(newproduct),
+      });
+
+      if (!response.ok) {
+        let data = await response.json();
+        throw new Error(data.message);
+      }
+      const responseData = await response.json();
+
+      console.log(responseData);
+      await fetchSP().then((data) => {
+        displayQLSP(productList);
+      });
+    } catch (error) {
+      alert(error);
+      console.error('Xảy ra lỗi khi gửi yêu cầu:', error);
+      throw error; // Re-throw the error for further handling (optional)
+    }
   } else {
     window.alert('Thiếu thông tin');
     return;
   }
-  saveProductList();
+  // saveProductList();
+}
+async function addQLNCC() {
+  let ten = document.getElementById('ten').value;
+  console.log(ten);
+  let diachi = document.getElementById('diachi').value;
+  let email = document.getElementById('email').value;
+  let sodienthoai = document.getElementById('sodienthoai').value;
+  let newncc = {
+    ten: ten,
+    diaChi: diachi,
+    soDienThoai: sodienthoai,
+    email: email,
+  };
+  console.log(newncc);
+
+  try {
+    let response = await fetch(host + '/nhacungcap', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Adjust content type if needed
+      },
+      body: JSON.stringify(newncc),
+    });
+
+    if (!response.ok) {
+      let data = await response.json();
+      throw new Error(data.message);
+    }
+    const responseData = await response.json();
+
+    console.log(responseData);
+    await fetchNCC();
+    displayQLNCC(nccList);
+    return responseData; // Return the response data
+  } catch (error) {
+    alert(error);
+    console.error('Xảy ra lỗi khi gửi yêu cầu:', error);
+    throw error; // Re-throw the error for further handling (optional)
+  }
 }
 function openAddQLSP() {
   var pa = document.getElementsByClassName('addEditQLSP')[0];
@@ -1143,6 +1647,9 @@ function openAddQLSP() {
     '<label for="">Giá</label><br>' +
     '<input id="priceQLSP" type="text"><br>' +
     '<label for="">Ảnh</label><br>' +
+    '<label for="">Số lượng</label><br>' +
+    '<input id="soluong" type="number" value=1><br>' +
+    '<label for="">Ảnh</label><br>' +
     '<input id="imgQLSP" type="file"><br>' +
     '<input id="img2QLSP" type="file"><br>' +
     '<input id="img3QLSP" type="file"><br>' +
@@ -1151,7 +1658,28 @@ function openAddQLSP() {
     '<button onclick="closeAddQLSP()" style="float: right;" >Cancel</button>';
   pa.appendChild(form);
 }
+function openAddQLNCC() {
+  var pa = document.getElementsByClassName('addEditQLSP')[0];
+  pa.innerHTML = '';
+  var form = document.createElement('div');
+  form.id = 'formAddQLSP';
+  form.style = 'padding:5px 10px';
+  form.innerHTML =
+    '<h3 style="text-align: center;">Thêm nhà cung cấp</h3>' +
+    '<label for="">Tên nhà cung cấp</label><br>' +
+    '<input id="ten" type="text"><br>' +
+    '<label for="">Địa chỉ nhà cung cấp</label><br>' +
+    '<input id="diachi" type="text"><br>' +
+    '<label for="">Email nhà cung cấp</label><br>' +
+    '<input id="email" type="text"><br>' +
+    '<label for="">Số điện thoại nhà cung cấp</label><br>' +
+    '<input id="sodienthoai" type="text" style="margin-bottom:10px"><br>' +
+    '<button onclick="addQLNCC()" style="float: right;margin-left:5px" >Submit</button>' +
+    '<button onclick="closeAddQLSP()" style="float: right;margin-bottom:10px" >Cancel</button>';
+  pa.appendChild(form);
+}
 function displayQLSP(List) {
+  console.log(List);
   content.innerHTML = '';
   var khung = document.createElement('div');
   khung.id = 'admin-QLSP';
@@ -1162,50 +1690,62 @@ function displayQLSP(List) {
     <td>Tên</td>
     <td>Loại</td>
     <td>Giá</td>
+    <td>Số lượng</td>
     <td>Chỉnh sửa</td>
     <td>Xóa</td>
   </tr>
   </table>`;
   var table = khung.querySelector('table');
   for (var i = 0; i < List.length; i++) {
+    let anh = List[i].listimg;
+    let img;
+    if (anh[0]) {
+      img = anh[0].url;
+    } else {
+      img = '../asset/anh/chibi figure/24 4.jpg';
+    }
     let element = document.createElement('tr');
     element.innerHTML =
       '<td>' +
-      List[i].id +
+      List[i].masanpham +
       '</td>' +
       '<td><img class="config" src="' +
-      List[i].img +
+      img +
       '" alt=""></td>' +
       '<td>' +
-      List[i].name +
+      List[i].ten +
       '</td>' +
       '<td>' +
-      List[i].type +
+      List[i].theloai +
       '</td>' +
       '<td>' +
-      List[i].price +
+      List[i].gia +
       'đ</td>' +
+      '<td>' +
+      List[i].soluong +
+      '</td>' +
       '<td align="center"><img onclick="openEditQLSP(' +
-      List[i].id +
+      List[i].masanpham +
       ')" class="config" src="../asset/icon/edit.png" alt=""></td>' +
       '<td align="center"><img onclick="deleteQLSP(' +
-      List[i].id +
+      List[i].masanpham +
       ')" class="config" src="../asset/icon/delete.png" alt=""></td>';
     table.appendChild(element);
   }
+
   let element = document.createElement('div');
   element.id = 'searchBar2';
   element.innerHTML = `<div id="searchQLSP">
-          <p>Loại:</p>
-          <select id="search-type-QPSP">
-          <option value="0">Tất cả</option>
-          <option value="1">Mô hình lẻ</option>
-          <option value="2">Mô hình chibi</option>
-          <option value="3">Bộ mô hình</option>
-          <option value="4">Cosplay</option>
-          <input id="input-searchByName-QLSP" type="text" placeholder="Tìm kiếm theo tên">
-          <button onclick="searchQLSP()" >Tìm kiếm</button>
+          <p>Sắp xếp theo:</p>
+          <select id="order_product">
+          <option value="ten asc">Tăng dần theo tên</option>
+          <option value="ten desc">Giảm dần theo tên</option>
+          <option value="gia asc">Tăng dần theo giá</option>
+          <option value="gia desc">Giảm dần theo giá</option>
+          <option value="masanpham asc">Tăng dần theo mã sản phẩm</option>
+          <option value="masanpham desc">giảm dần theo mã sản phẩm</option>
           </select>
+          <h3 onclick="openTKNC()" id="TKNCp" class="darkMode">Tìm kiếm nâng cao</h3>
         </div>
         <div id="addProductQLSP">
           <a href="#"><p onclick="openAddQLSP()">+ Thêm sản phẩm</p></a>
@@ -1215,10 +1755,132 @@ function displayQLSP(List) {
   content.appendChild(form);
   content.appendChild(element);
   content.appendChild(khung);
+  document
+    .getElementById('order_product')
+    .addEventListener('change', function () {
+      var selectedOption = this.value;
+      console.log('Đã chọn: ' + selectedOption);
+
+      async function getData(url) {
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+          console.log(data);
+          displayQLSP(data);
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+      getData(host + '/sanphamorder/' + selectedOption);
+    });
   // let searchTypeElm = document.getElementById("search-type-QPSP");
   // searchTypeElm.value = searchType;
   // let searchValueElm = document.getElementById("input-searchByName-QLSP");
   // searchValueElm.value = searchVal;
+}
+function displayQLNCC(List) {
+  content.innerHTML = '';
+  var khung = document.createElement('div');
+  khung.id = 'admin-QLSP';
+  khung.innerHTML = `<table border="1px" bordercolor="red" id="table-QLSP">
+  <tr style="background-color: #7b517b;">
+    <td>ID</td>
+    <td>Tên</td>
+    <td>Địa chỉ</td>
+    <td>Email</td>
+    <td>Số điện thoại</td>
+    <td>Chỉnh sửa</td>
+    <td>Xóa</td>
+  </tr>
+  </table>`;
+  var table = khung.querySelector('table');
+  for (var i = 0; i < List.length; i++) {
+    let element = document.createElement('tr');
+    element.innerHTML =
+      '<td>' +
+      List[i].manhacungcap +
+      '</td>' +
+      '<td>' +
+      List[i].ten +
+      '</td>' +
+      '<td>' +
+      List[i].diaChi +
+      '</td>' +
+      '<td>' +
+      List[i].email +
+      '</td>' +
+      '<td>' +
+      List[i].soDienThoai +
+      '</td>' +
+      '<td align="center"><img onclick="openEditQLNCC(' +
+      List[i].manhacungcap +
+      ')" class="config" src="../asset/icon/edit.png" alt=""></td>' +
+      '<td align="center"><img onclick="deleteQLNCC(' +
+      List[i].manhacungcap +
+      ')" class="config" src="../asset/icon/delete.png" alt=""></td>';
+    table.appendChild(element);
+  }
+
+  let element = document.createElement('div');
+  element.id = 'searchBar2';
+  element.innerHTML = `<div id="searchQLSP">
+          <p>Sắp xếp theo:</p>
+          <select id="nhacungcap_order">
+          <option value="ten asc">Tăng dần theo tên</option>
+          <option value="ten desc">Giảm dần theo tên</option>
+          <option value="manhacungcap asc">Tăng dần theo mã nhà cung cấp</option>
+          <option value="manhacungcap desc">Giảm dần theo mã nhà cung cấp</option>
+          </select>
+          <h3 onclick="openTKNCNCC()" id="TKNCp" class="darkMode">Tìm kiếm nâng cao</h3>
+        </div>
+        <div id="addProductQLSP">
+          <a href="#"><p onclick="openAddQLNCC()">+ Thêm nhà cung cấp</p></a>
+        </div>`;
+  let form = document.createElement('div');
+  form.className = 'addEditQLSP';
+  content.appendChild(form);
+  content.appendChild(element);
+  content.appendChild(khung);
+  document
+    .getElementById('nhacungcap_order')
+    .addEventListener('change', async function () {
+      var selectedOption = this.value;
+      console.log('Đã chọn: ' + selectedOption);
+
+      async function getData(url) {
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+          console.log(data);
+          displayQLNCC(data);
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+      getData(host + '/nhacungcap/nhacungcaporder/' + selectedOption);
+    });
+  // let searchTypeElm = document.getElementById("search-type-QPSP");
+  // searchTypeElm.value = searchType;
+  // let searchValueElm = document.getElementById("input-searchByName-QLSP");
+  // searchValueElm.value = searchVal;
+}
+async function deleteQLNCC(id) {
+  let ans = confirm('Ban chac chan muon xoa nha cung cap?');
+  if (ans == 1) {
+    console.log(user.user_id);
+    let response = await fetch(host + '/nhacungcap/' + id, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json', // Adjust content type if needed
+        // Add any other headers if needed
+      },
+    });
+    if (response.ok) {
+      let data = await response.json();
+      let list = await fetchNCC();
+      displayQLNCC(list);
+    }
+  }
 }
 function searchTKSP() {
   productListHai = productList;

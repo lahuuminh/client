@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      /* body {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 5px;
+      }
+
+      th {
+        text-align: center;
+      }
+      .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-top: 50px; 
+        padding: 20px;
+        border: 1px solid #ccc; 
+        border-radius: 10px; 
+        background-color: #f9f9f9;
+        width: 60%; 
+        margin-left: auto; 
+        margin-right: auto; 
+        margin-bottom: 20px;
+        font-size: 13px;
+      } */
+      .content {
+        text-align: center;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        width: 60%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+      button {
+        margin-top: 20px; /* Điều chỉnh khoảng cách giữa bảng và nút */
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        display: block; /* Để nút hiển thị dưới dạng block và nằm ở cuối trang */
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <title>Hóa đơn bán hàng</title>
+      <h1>Hóa đơn bán hàng</h1>
+      <p id="order-id"></p>
+      <p id="customer-name"></p>
+      <p id="customer-address"></p>
+      <p id="order-date"></p>
+      <p id="order-total"></p>
+    </div>
+
+    <table id="order-items">
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Mã sản phẩm</th>
+          <th>Số lượng</th>
+          <th>Giá bán</th>
+          <th>Thành tiền</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <!-- <button onclick="goToAdminPage()">Trở về trang admin</button>
+    <button onclick="goToAdminPage()">In</button> -->
+  </body>
+  <script>
+    // Hàm để lấy giá trị của query parameter từ URL
+    function getQueryParam(param) {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      return urlParams.get(param);
+    }
+    function goToAdminPage() {
+      window.location.href = 'index.html'; // Thay "link_trang_admin.html" bằng đường dẫn thực tế của trang admin
+    }
+
+    // Lấy giá trị của query parameter có tên là "ma"
+    const maValue = getQueryParam('ma');
+    let data;
+    async function getData(a) {
+      try {
+        const response = await fetch('http://localhost:8080/hoadon/find/' + a); // Thay thế URL bằng URL thực tế của server bạn muốn lấy dữ liệu từ
+        data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.message);
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+    getData(maValue).then(() => {
+      console.log("Giá trị của tham số 'ma' là:", maValue);
+      const orderId = 123; // Thay thế bằng mã đơn hàng của bạn
+      const customerName = 'John Doe'; // Thay thế bằng tên khách hàng
+      const customerAddress = '123 Main Street, Anytown, CA 12345'; // Thay thế bằng địa chỉ khách hàng
+      const orderDate = new Date(); // Thay thế bằng ngày bán
+
+      const orderItems = data.chitiethoadonList;
+      console.log(orderItems);
+      document.getElementById(
+        'order-id'
+      ).textContent = `Mã đơn hàng: ${data.mahoadon}`;
+      document.getElementById(
+        'customer-name'
+      ).textContent = `Khách hàng: ${data.u.username}`;
+      document.getElementById(
+        'customer-address'
+      ).textContent = `Địa chỉ: ${data.u.address}`;
+      document.getElementById(
+        'order-date'
+      ).textContent = `Ngày bán: ${data.ngaymua}`;
+
+      const orderItemsTable = document.getElementById('order-items');
+      for (const item of orderItems) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.mahoadon}</td>
+            <td>${item.masanpham}</td>
+            <td>${item.soluong}</td>
+            <td>${item.gia}</td>
+            <td>${item.soluong * item.gia}</td>
+        `;
+        orderItemsTable.appendChild(row);
+      }
+
+      document.getElementById(
+        'order-total'
+      ).textContent = `Tổng tiền: ${data.tongtien}`;
+
+      window.print(); // Kích hoạt tính năng in của trình duyệt
+    });
+  </script>
+</html>

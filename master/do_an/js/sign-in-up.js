@@ -347,10 +347,10 @@ const logoutButton = document.querySelector('#logout');
 
 // nút xác nhận đăng nhập
 const loginButton = document.querySelector('#login');
-
+console.log(loginButton);
 //nút admin
 const adminButton = document.querySelector('#admin');
-
+const adminButton1 = document.querySelector('#admin1');
 //nút xem thông tin tài khoản
 const userInforButton = document.querySelector('#infor_user');
 
@@ -459,7 +459,9 @@ loginButton.addEventListener('click', async (e) => {
         currentUser.user_id
       );
       // onLoginSuccess(JSON.parse(localStorage.getItem('currentUser')));
-      location.reload();
+      console.log(1);
+      // location.reload();
+      checklogin();
       accountNameLogin.value = '';
       passWordLogin.value = '';
     } else {
@@ -496,20 +498,31 @@ loginButton.addEventListener('click', async (e) => {
   // }
 });
 // Khi đăng nhập thành công
-let currentUserLogged = localStorage.getItem('currentUser');
-console.log(currentUserLogged);
-if (currentUserLogged) {
-  onLoginSuccess(currentUserLogged);
+
+function checklogin() {
+  let currentUserLogged = localStorage.getItem('currentUser');
+  if (currentUserLogged) {
+    onLoginSuccess(currentUserLogged);
+  }
 }
+checklogin();
 function onLoginSuccess(user) {
   user = JSON.parse(user);
 
   if (user) {
     console.log(1);
     changeOnLoginSuccess();
-    if (user.role === 'admin') {
+    if (
+      user.role === 'nguoiquanlykho' ||
+      user.role === 'nguoiban' ||
+      user.role === 'nguoiquanly'
+    ) {
       console.log('admin');
       adminButton.style.display = 'initial';
+    }
+    if (user.role === 'admin') {
+      console.log('admin_1');
+      adminButton1.style.display = 'initial';
     }
   }
 }
