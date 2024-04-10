@@ -68,6 +68,12 @@ function showDetail(item) {
         productList[i].gia +
         "đ</span>" +
         "</div>" +
+        '<div class="soluong">' +
+        '<span class="header-detail">Số lượng có thể mua:</span>' +
+        '<span class="value_soluong">' +
+        productList[i].soluong +
+        "</span>" +
+        "</div>" +
         '<div class="amount">' +
         '<p class="header-detail">Số Lượng:</p>' +
         '<div class="decrease">-</div>' +
@@ -82,7 +88,7 @@ function showDetail(item) {
         content.innerHTML = s;
         content.style.zIndex = 99;
         addCloseBehavior(content);
-        addAmountChangeBehavior();
+        addAmountChangeBehavior(productList[i].soluong);
         addImgSelectBehavior();
         addCartButtonBehavior(productList[i].masanpham,name, price, img, content);
         console.log(productList[i].masanpham)
@@ -110,6 +116,7 @@ function showDetail2(item) {
   price = price.replace("Giá:", "");
   for (var i = 0; i < productList.length; i++) {
       // console.log(productList[i])
+      soluong=productList[i].soluong
       newurl1=productList[i].listimg[0].url
     if (name === productList[i].ten) {
       console.log(1)
@@ -173,6 +180,12 @@ function showDetail2(item) {
         price +
         "</span>" +
         "</div>" +
+        '<div class="soluong">' +
+        '<span class="header-detail">Số lượng có thể mua:</span>' +
+        '<span class="value_soluong">' +
+        soluong +
+        "</span>" +
+        "</div>" +
         '<div class="amount">' +
         '<p class="header-detail">Số Lượng:</p>' +
         '<div class="decrease">-</div>' +
@@ -187,7 +200,9 @@ function showDetail2(item) {
       content.innerHTML = s;
       content.style.zIndex = 99;
       addCloseBehavior(content);
-      addAmountChangeBehavior();
+      
+      addAmountChangeBehavior(soluong);
+      console.log(soluong);
       addImgSelectBehavior();
       addCartButtonBehavior(productId,name, price, img, content);
       break;
@@ -232,13 +247,12 @@ function addImgSelectBehavior() {
   }
 }
 
-function addAmountChangeBehavior() {
+function addAmountChangeBehavior(soluong) {
   let quantity = document.getElementsByClassName("quantity")[0];
   let increase = document.getElementsByClassName("increase")[0];
   let decrease = document.getElementsByClassName("decrease")[0];
-
   increase.addEventListener("click", (e) => {
-    quantity.value = Math.min(parseInt(quantity.value) + 1, 999);
+    quantity.value = Math.min(parseInt(quantity.value) + 1, soluong);
   });
   decrease.addEventListener("click", (e) => {
     quantity.value = Math.max(parseInt(quantity.value) - 1, 1);
