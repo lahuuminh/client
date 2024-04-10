@@ -12,9 +12,16 @@ async function fetchUser() {
   return userList;
 }
 fetchUser();
-let orderList = localStorage.getItem('orderList')
-  ? JSON.parse(localStorage.getItem('orderList'))
-  : [];
+let orderList;
+// let orderList = localStorage.getItem('orderList')
+//   ? JSON.parse(localStorage.getItem('orderList'))
+//   : [];
+async function fetchOrderList() {
+  const response = await fetch(host + '/hoadon/user'); // Thay thế URL bằng URL thực tế của server bạn muốn lấy dữ liệu từ
+  orderList = await response.json();
+  console.log(orderList);
+}
+
 var productList = localStorage.getItem('productList')
   ? JSON.parse(localStorage.getItem('productList'))
   : [];
@@ -39,12 +46,14 @@ window.onload = () => {
   });
 
   let tkDonHang = document.getElementById('tkDonHang');
-  tkDonHang.addEventListener('click', () => {
+  tkDonHang.addEventListener('click', async () => {
+    await fetchOrderList();
     displayOrderManagement(orderList);
   });
 
   let qlTaiKhoan = document.getElementById('userManagement');
   qlTaiKhoan.addEventListener('click', () => {
+    console.log(1);
     displayUserManagement(userList);
   });
 
@@ -69,13 +78,14 @@ function closeOrderManagement() {
   location.reload();
 }
 function displayOrderManagement(orderList) {
+  console.log(orderList);
   content.innerHTML =
     '<ul id="dsDonHang" class="dsDonHang">' +
     '<li class="donHang">' +
     '<div class="STT">STT</div>' +
     '<div class="MaDon">Mã Đơn</div>' +
     '<div class="Khach">Khách</div>' +
-    '<div class="SanPham">Sản phẩm</div>' +
+    // '<div class="SanPham">Sản phẩm</div>' +
     '<div class="TongTien">Tổng tiền</div>' +
     '<div class="Ngaygio">Ngày giờ</div>' +
     '<div class="Trangthai">Trạng thái</div>' +
@@ -103,27 +113,29 @@ function displayOrderManagement(orderList) {
     '</div>';
   let searchBtn = document.getElementsByClassName('applySearch');
   let orderElm = document.getElementById('dsDonHang');
+  console.log(orderElm);
   loadOrderList(orderElm, orderList);
-  for (let i = 0; i < searchBtn.length; ++i) {
-    searchBtn[i].addEventListener('click', (e) => {
-      e.preventDefault();
-      let list = [];
-      if (i === 0) list = conditionSearch('Date');
-      if (i === 1) list = conditionSearch('Value');
-      if (list.length == 0)
-        loadOrderList(orderElm, JSON.parse(localStorage.getItem('orderList')));
-      else loadOrderList(orderElm, list);
-    });
-  }
+
+  searchBtn[0].addEventListener('click', (e) => {
+    e.preventDefault();
+    let list = [];
+    list = conditionSearch('Date');
+    console.log(orderElm.children.length);
+    // if (i === 1) list = conditionSearch('Value');
+    // if (list.length == 0)
+    //   loadOrderList(orderElm, JSON.parse(localStorage.getItem('orderList')));
+    loadOrderList(orderElm, list);
+  });
 }
 
 function loadOrderList(orderElm, orderList) {
-  let orderChild = orderElm.children;
-  for (let i = 1; i < orderChild.length; ++i) {
+  let orderChild = orderElm.childNodes;
+  for (let i = orderChild.length - 1; i > 0; i--) {
     orderChild[i].parentNode.removeChild(orderChild[i]);
   }
-  console.log(orderChild);
+
   for (let i = 0; i < orderList.length; ++i) {
+    orderList[i].ngaymua = orderList[i].ngaymua.substring(0, 10);
     let li = document.createElement('li');
     li.setAttribute('class', 'donHang');
     li.innerHTML =
@@ -131,22 +143,22 @@ function loadOrderList(orderElm, orderList) {
       i +
       '</div>' +
       '<div class="MaDon">' +
-      orderList[i].maDon +
+      orderList[i].mahoadon +
       '</div>' +
       '<div class="Khach">' +
-      orderList[i].khachHang +
+      orderList[i].user_id +
       '</div>' +
-      '<div class="SanPham">' +
-      orderList[i].sanPham +
-      '</div>' +
+      // '<div class="SanPham">' +
+      // orderList[i].masanPham +
+      // '</div>' +
       '<div class="TongTien">' +
-      orderList[i].tongTien +
+      orderList[i].tongtien +
       '</div>' +
       '<div class="Ngaygio">' +
-      orderList[i].ngayLap +
+      orderList[i].ngaymua +
       '</div>' +
       '<div class="Trangthai">' +
-      orderList[i].trangThai +
+      orderList[i].trangthaihoadon +
       '</div>' +
       '<div class="HanhDong">' +
       '<div class="accept">Y</div>' +
@@ -157,26 +169,74 @@ function loadOrderList(orderElm, orderList) {
     let deny = li.getElementsByClassName('deny')[0];
     let status = li.getElementsByClassName('Trangthai')[0];
 
-    accept.addEventListener('click', () => {
-      if (status.innerHTML.localeCompare('Da Giao Hang') === 0) return;
-      if (status.innerHTML.localeCompare('Da Huy') === 0)
-        return alert('khong the giao don hang da huy');
+    accept.addEventListener('click', async () => {
+      if (status.innerHTML.localeCompare('Da Giao Hang') === 0) {
+        return;
+      }
+      if (status.innerHTML.localeCompare('Da Huy') === 0) {
+        alert('khong the giao don hang da huy');
+        return;
+      }
       let ans = confirm('Bạn chắc chắn muốn giao hàng ?');
       if (ans == 1) {
-        console.log('dcm');
-        status.innerHTML = 'Da Giao Hang';
-        setOrderStatus(orderList[i].maDon, 'Da Giao Hang');
+        try {
+          const response = await fetch(
+            'http://localhost:8080/hoadon/accept/' + orderList[i].mahoadon,
+            {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+
+          if (!response.ok) {
+            let data = await response.json();
+            throw new Error(data.message);
+          }
+          if (response.status === 202) {
+            const result = await response.json();
+            console.log(result);
+            console.log('dcm');
+            status.innerHTML = 'Da Giao Hang';
+            setOrderStatus(orderList[i].maDon, 'Da Giao Hang');
+          } else {
+            alert('1 số mặt hàng đã hết vui lòng đợi ');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
       }
     });
 
-    deny.addEventListener('click', () => {
+    deny.addEventListener('click', async () => {
       if (status.innerHTML.localeCompare('Da Huy') === 0) return;
       if (status.innerHTML.localeCompare('Da Giao Hang') === 0)
         return alert('Khong the huy don hang da giao');
       let ans = confirm('Bạn chắc chắn muốn hủy,thao tác không thể hoàn tác!?');
       if (ans == 1) {
-        status.innerHTML = 'Da Huy';
-        setOrderStatus(orderList[i].maDon, 'Da Huy');
+        try {
+          const response = await fetch(
+            'http://localhost:8080/hoadon/deny/' + orderList[i].mahoadon,
+            {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+
+          if (!response.ok) {
+            let data = await response.json();
+            throw new Error(data.message);
+          }
+          const result = await response.json();
+          console.log(result);
+          status.innerHTML = 'Da Huy';
+          setOrderStatus(orderList[i].maDon, 'Da Huy');
+        } catch (error) {
+          console.error('Error:', error);
+        }
       }
     });
   }
@@ -196,57 +256,60 @@ function conditionSearch(condition) {
     console.log(fromDateInput);
     console.log(toDateInput);
     Array.from(orderList).forEach((element) => {
-      let d = new Date(element.ngayLap);
+      let d = new Date(element.ngaymua);
+      console.log(d);
       if (d >= fromDateInput && d <= toDateInput) searchOrderList.push(element);
+      console.log(searchOrderList);
     });
   }
-  if (condition.localeCompare('Value') == 0) {
-    let Opt = document.getElementById('searchType');
-    let inputVal = document.getElementById('inputValue').value;
-    let value = Opt.value;
-    console.log(inputVal);
-    switch (value) {
-      case '1':
-        Array.from(orderList).forEach((element) => {
-          if (element.maDon == inputVal) searchOrderList.push(element);
-        });
-        break;
-      case '2':
-        Array.from(orderList).forEach((element) => {
-          if (element.khachHang == inputVal) searchOrderList.push(element);
-        });
-        break;
-      case '3':
-        Array.from(orderList).forEach((element) => {
-          if (element.trangThai == inputVal) searchOrderList.push(element);
-        });
-        break;
-      default:
-        break;
-    }
-  }
-  if (condition.localeCompare('User') == 0) {
-    let userSearchType = document.getElementById('userSearchType').value;
-    let inputVal = document.getElementById('userSearchValue').value;
-    userList.forEach((user) => {
-      switch (userSearchType) {
-        case '1':
-          if (user.accountName.localeCompare(inputVal) == 0)
-            searchOrderList.push(user);
-          break;
-        case '2':
-          if (user.userName.localeCompare(inputVal) == 0)
-            searchOrderList.push(user);
-          break;
-        case '3':
-          if (user.email.localStorage(inputVal) == 0)
-            searchOrderList.push(user);
-          break;
-        default:
-          break;
-      }
-    });
-  }
+  // if (condition.localeCompare('Value') == 0) {
+  //   let Opt = document.getElementById('searchType');
+  //   let inputVal = document.getElementById('inputValue').value;
+  //   let value = Opt.value;
+  //   console.log(inputVal);
+  //   switch (value) {
+  //     case '1':
+  //       Array.from(orderList).forEach((element) => {
+  //         if (element.mahoadon == inputVal) searchOrderList.push(element);
+  //       });
+  //       break;
+  //     case '2':
+  //       Array.from(orderList).forEach((element) => {
+  //         if (element.user_id == inputVal) searchOrderList.push(element);
+  //       });
+  //       break;
+  //     case '3':
+  //       Array.from(orderList).forEach((element) => {
+  //         if (element.trangthaihoadon == inputVal)
+  //           searchOrderList.push(element);
+  //       });
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }
+  // if (condition.localeCompare('User') == 0) {
+  //   let userSearchType = document.getElementById('userSearchType').value;
+  //   let inputVal = document.getElementById('userSearchValue').value;
+  //   userList.forEach((user) => {
+  //     switch (userSearchType) {
+  //       case '1':
+  //         if (user.accountname.localeCompare(inputVal) == 0)
+  //           searchOrderList.push(user);
+  //         break;
+  //       case '2':
+  //         if (user.username.localeCompare(inputVal) == 0)
+  //           searchOrderList.push(user);
+  //         break;
+  //       case '3':
+  //         if (user.email.localStorage(inputVal) == 0)
+  //           searchOrderList.push(user);
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   });
+  // }
   return searchOrderList;
 }
 // DO DU LIEU CUA NGUOI DUNG
@@ -313,6 +376,12 @@ function displayUserManagement(userList) {
       '<label for="email">Email</label>' +
       '<label for="email" id="emailErr" style="color:red">Email phai tuan thu abc@email.com</label>' +
       '<input type="email" id="email" placeholder="Email">' +
+      '<label for="address">Address</label>' +
+      '<label for="address" id="addressErr" style="color:red">Address không được để trống</label>' +
+      '<input type="text" id="address" placeholder="Address">' +
+      '<label for="phone">Phone</label>' +
+      '<label for="phone" id="phoneErr" style="color:red">Phone phải có 10 số </label>' +
+      '<input type="text" id="phone" placeholder="Phone">' +
       '<div class="btnWrapper">' +
       '<button type="submit" class="submitBtn">Submit</button>' +
       '<button type="reset" >reset</button>' +
@@ -386,27 +455,31 @@ function loadUserList(userElm, userList) {
         '<label for="name">Ho ten</label>' +
         '<label for="name" id="nameErr" style="color:red">Ho ten khong chua ky tu dac biet va toi da 128 ky tu</label>' +
         '<input type="text" id="name">' +
-        '<label for="loginName">Ten dang nhap</label>' +
-        '<label for="loginName" id="loginNameErr" style="color:red">Ten dang nhap khong toi da 8 ky tu va khong chua ky' +
-        'tu dac biet</label>' +
-        '<input type="text" id="loginName">' +
         '<label for="loginPassword">Mat Khau</label>' +
         '<label for="loginPassword" id="loginPasswordErr" style="color:red">Mat khau toi da 8 ky tu khong chua ky tu dac' +
         'biet</label>' +
         '<input type="text" id="loginPassword">' +
         '<label for="email">Email</label>' +
         '<label for="email" id="emailErr" style="color:red">Email phai tuan thu abc@email.com</label>' +
-        '<input type="email" id="email" value={user.email}>' +
+        '<input type="email" id="email">' +
+        '<label for="phone">Phone</label>' +
+        '<label for="phone" id="phoneErr" style="color:red">Phone phải có 10 số</label>' +
+        '<input type="text" id="phone">' +
+        '<label for="address">Address</label>' +
+        '<label for="address" id="addressErr" style="color:red">Address không được trống</label>' +
+        '<input type="text" id="address">' +
         '<div class="btnWrapper">' +
         '<button type="submit" class="submitBtn">Update</button>' +
         '<button type="reset" >reset</button>' +
         '</div>';
+      console.log(user);
       content.appendChild(form);
       document.getElementById('name').value = user.username;
-      document.getElementById('loginName').value = user.accountname;
       document.getElementById('loginPassword').value = user.password;
       document.getElementById('email').value = user.email;
-      updateAccount(user.user_id);
+      document.getElementById('address').value = user.address;
+      document.getElementById('phone').value = user.phone;
+      updateAccount(user.user_id, user.accountname);
       addCloseBehavior(content, form);
     });
     console.log(li);
@@ -414,45 +487,66 @@ function loadUserList(userElm, userList) {
 }
 // fetch post api user
 
-function updateAccount(type) {
+function updateAccount(type, a) {
   let createAccountForm = document.getElementById('createAccountBox');
 
   let name = document.getElementById('name');
-  let loginName = document.getElementById('loginName');
   let loginPass = document.getElementById('loginPassword');
   let email = document.getElementById('email');
-
+  let address = document.getElementById('address');
+  let phone = document.getElementById('phone');
   const nameReg = /[a-zA-Z]{3,}$/;
-  const loginNameReg = /[a-zA-Z0-9]{1,128}$/;
   const loginPassReg = /[a-zA-Z0-9]{8,}$/;
   const emailReg = /([a-z]|[A-Z]|[0-9]){1,64}@([a-z]|[A-Z]|[0-9]|.){1,255}$/;
+  const phoneReg = /(84|0[35789])[0-9]{8}$/;
+  const addressReg = /.{1}/;
 
   let nameErr = document.getElementById('nameErr');
-  let loginNameErr = document.getElementById('loginNameErr');
+
   let loginPassErr = document.getElementById('loginPasswordErr');
   let emailErr = document.getElementById('emailErr');
+  let phoneErr = document.getElementById('phoneErr');
+  let addressErr = document.getElementById('addressErr');
+
   nameErr.style.display = 'none';
-  loginNameErr.style.display = 'none';
+
   loginPassErr.style.display = 'none';
   emailErr.style.display = 'none';
+  phoneErr.style.display = 'none';
+  addressErr.style.display = 'none';
   createAccountForm.addEventListener('submit', (e) => {
     nameErr.style.display = 'none';
-    loginNameErr.style.display = 'none';
+
     loginPassErr.style.display = 'none';
     emailErr.style.display = 'none';
+    phoneErr.style.display = 'none';
+    addressErr.style.display = 'none';
 
     name.style.borderColor = 'black';
-    loginName.style.borderColor = 'black';
+
     loginPass.style.borderColor = 'black';
     email.style.borderColor = 'black';
+    phoneErr.style.display = 'black';
+    addressErr.style.display = 'black';
 
     e.preventDefault();
 
     let nameVal = name.value;
-    let loginNameVal = loginName.value;
+
     let loginPassVal = loginPass.value;
     let emailVal = email.value;
-
+    let phoneVal = phone.value;
+    let addressVal = address.value;
+    if (!addressReg.test(addressVal)) {
+      addressErr.style.display = 'block';
+      address.style.borderColor = 'red';
+      address.focus();
+    }
+    if (!phoneReg.test(phoneVal)) {
+      phoneErr.style.display = 'block';
+      phone.style.borderColor = 'red';
+      phone.focus();
+    }
     if (!emailReg.test(emailVal)) {
       emailErr.style.display = 'block';
       email.style.borderColor = 'red';
@@ -463,11 +557,7 @@ function updateAccount(type) {
       loginPass.style.borderColor = 'red';
       loginPass.focus();
     }
-    if (!loginNameReg.test(loginNameVal)) {
-      loginNameErr.style.display = 'block';
-      loginName.style.borderColor = 'red';
-      loginName.focus();
-    }
+
     if (!nameReg.test(nameVal)) {
       nameErr.style.display = 'block';
       name.style.borderColor = 'red';
@@ -475,20 +565,21 @@ function updateAccount(type) {
     }
     if (
       nameReg.test(nameVal) &&
-      loginNameReg.test(loginNameVal) &&
       loginPassReg.test(loginPassVal) &&
-      emailReg.test(emailVal)
+      emailReg.test(emailVal) &&
+      phoneReg.test(phoneVal) &&
+      addressReg.test(addressVal)
     ) {
       let newuser = {
         username: nameVal,
-        accountname: loginNameVal,
         password: loginPassVal,
         email: emailVal,
-        phoneNumber: '',
-        address: '',
+        phone: phoneVal,
+        address: addressVal,
         status: 'active', // trạng thái đăng nhập
         role: 'nguoimua',
         user_id: type,
+        accountname: a,
       };
 
       console.log(newuser);
@@ -501,13 +592,19 @@ function updateAccount(type) {
         body: JSON.stringify(newuser), // Chuyển đổi object thành chuỗi JSON để gửi đi
       };
       fetch(host + '/user', requestOptions)
-        .then((response) => {
+        .then(async (response) => {
           if (!response.ok) {
-            throw new Error('Network response was not ok');
+            let data = await response.json();
+            throw new Error(data.message);
           }
           // Xử lý phản hồi nếu cần thiết
-          console.log('Update successful!');
-          return response.json();
+          if (response.status === 202) {
+            console.log('Update successful!');
+            return response.json();
+          } else {
+            alert('Tên người dùng đã tồn tại ');
+            throw new Error('User da ton tai');
+          }
         })
         .then((data) => {
           console.log('Dữ liệu được trả về từ server:', data);
@@ -547,30 +644,42 @@ function createAccountFunc() {
   let loginName = document.getElementById('loginName');
   let loginPass = document.getElementById('loginPassword');
   let email = document.getElementById('email');
-
+  let address = document.getElementById('address');
+  let phone = document.getElementById('phone');
   const nameReg = /[a-zA-Z]{3,}$/;
   const loginNameReg = /[a-zA-Z0-9]{1,128}$/;
   const loginPassReg = /[a-zA-Z0-9]{8,}$/;
   const emailReg = /([a-z]|[A-Z]|[0-9]){1,64}@([a-z]|[A-Z]|[0-9]|.){1,255}$/;
+  const phoneReg = /(84|0[35789])[0-9]{8}$/;
+  const addressReg = /.{1}/;
 
   let nameErr = document.getElementById('nameErr');
   let loginNameErr = document.getElementById('loginNameErr');
   let loginPassErr = document.getElementById('loginPasswordErr');
   let emailErr = document.getElementById('emailErr');
+  let phoneErr = document.getElementById('phoneErr');
+  let addressErr = document.getElementById('addressErr');
+
   nameErr.style.display = 'none';
   loginNameErr.style.display = 'none';
   loginPassErr.style.display = 'none';
   emailErr.style.display = 'none';
+  phoneErr.style.display = 'none';
+  addressErr.style.display = 'none';
   createAccountForm.addEventListener('submit', async (e) => {
     nameErr.style.display = 'none';
     loginNameErr.style.display = 'none';
     loginPassErr.style.display = 'none';
     emailErr.style.display = 'none';
+    phoneErr.style.display = 'none';
+    addressErr.style.display = 'none';
 
     name.style.borderColor = 'black';
     loginName.style.borderColor = 'black';
     loginPass.style.borderColor = 'black';
     email.style.borderColor = 'black';
+    phoneErr.style.border = 'black';
+    addressErr.style.border = 'black';
 
     e.preventDefault();
 
@@ -578,7 +687,8 @@ function createAccountFunc() {
     let loginNameVal = loginName.value;
     let loginPassVal = loginPass.value;
     let emailVal = email.value;
-
+    let phoneVal = phone.value;
+    let addressVal = address.value;
     if (!emailReg.test(emailVal)) {
       emailErr.style.display = 'block';
       email.style.borderColor = 'red';
@@ -588,6 +698,16 @@ function createAccountFunc() {
       loginPassErr.style.display = 'block';
       loginPass.style.borderColor = 'red';
       loginPass.focus();
+    }
+    if (!phoneReg.test(phoneVal)) {
+      phoneErr.style.display = 'block';
+      phone.style.borderColor = 'red';
+      phone.focus();
+    }
+    if (!addressReg.test(addressVal)) {
+      addressErr.style.display = 'block';
+      address.style.borderColor = 'red';
+      address.focus();
     }
     if (!loginNameReg.test(loginNameVal)) {
       loginNameErr.style.display = 'block';
@@ -599,21 +719,26 @@ function createAccountFunc() {
       name.style.borderColor = 'red';
       name.focus();
     }
+    console.log('create');
     if (
       nameReg.test(nameVal) &&
       loginNameReg.test(loginNameVal) &&
       loginPassReg.test(loginPassVal) &&
-      emailReg.test(emailVal)
+      emailReg.test(emailVal) &&
+      phoneReg.test(phoneVal) &&
+      addressReg.test(addressVal)
     ) {
+      console.log('begin');
       let newuser = {
         username: nameVal,
         accountname: loginNameVal,
         password: loginPassVal,
         email: emailVal,
-        phoneNumber: '',
-        address: '',
+        phone: phoneVal,
+        address: addressVal,
         status: '', // trạng thái đăng nhập
       };
+      console.log(newuser);
       // Sử dụng hàm postData
       try {
         let response = await fetch(host + '/user', {
@@ -625,14 +750,20 @@ function createAccountFunc() {
         });
 
         if (!response.ok) {
-          throw new Error(`Lỗi mạng hoặc lỗi HTTP, mã lỗi: ${response.status}`);
+          let data = await response.json();
+          throw new Error(data.message);
         }
-
         const responseData = await response.json();
-        await fetchUser();
-        displayUserManagement(userList);
-        return responseData; // Return the response data
+        if (response.status === 201) {
+          console.log(responseData);
+          await fetchUser();
+          displayUserManagement(userList);
+          return responseData; // Return the response data
+        } else {
+          alert(responseData.message);
+        }
       } catch (error) {
+        alert(error);
         console.error('Xảy ra lỗi khi gửi yêu cầu:', error);
         throw error; // Re-throw the error for further handling (optional)
       }
