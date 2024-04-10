@@ -136,20 +136,28 @@ function searchTKNC() {
   var type = document.getElementById('inputTypeTKNC').value;
   var min = document.getElementById('inputMinTKNC').value;
   var max = document.getElementById('inputMaxTKNC').value;
-  var checkPrice = /^[0-9]{1,15}$/;
-  console.log(type);
   if (min !== '') {
-    if (!checkPrice.test(min)) {
+    if (!typeof min == 'number') {
       window.alert('Sai min');
       return;
     }
+  } else {
+    min = 1.0;
   }
   if (max !== '') {
-    if (!checkPrice.test(max)) {
+    if (!typeof max == 'number') {
       window.alert('Sai max');
       return;
     }
+  } else {
+    max = 100000000;
   }
+  min = parseFloat(min);
+  max = parseFloat(max);
+  type = parseInt(type);
+
+  console.log(type);
+
   // kq= [];
   // if(type!=0)
   // {
