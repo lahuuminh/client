@@ -59,6 +59,7 @@ let receiveList = [
     {
         MaPhieuNhap: 200000,
         CongTy: "ABC",
+        SanPham:"XYZ",
         SoLuong: 1,
         NgayNhap: "2004/08/20",
         TongCong: Infinity,
@@ -66,6 +67,7 @@ let receiveList = [
     {
         MaPhieuNhap: 20300,
         CongTy: "ABD",
+        SanPham:"GHK",
         SoLuong: 1,
         NgayNhap: "2004/08/20",
         TongCong: Infinity,
@@ -551,7 +553,7 @@ function displayReceivedNote(receiveList) {
         '<div class="STT">STT</div>' +
         '<div class="MaPhieuNhap">Mã Phieu Nhap</div>' +
         '<div class="CongTy">Cong ty</div>' +
-        // '<div class="SanPham">Sản phẩm</div>' +
+        '<div class="SanPham">Sản phẩm</div>' +
         '<div class="SoLuong">So luong</div>' +
         '<div class="NgayNhap">Ngày Nhap</div>' +
         '<div class="TongCong">Tong cong</div>' +
@@ -612,9 +614,9 @@ function loadReceivedList(receiveElm, receiveList) {
             '<div class="Khach">' +
             receiveList[i].CongTy +
             "</div>" +
-            // '<div class="SanPham">' +
-            // orderList[i].masanPham +
-            // '</div>' +
+            '<div class="SanPham">' +
+            receiveList[i].SanPham +
+            '</div>' +
             '<div class="TongTien">' +
             receiveList[i].SoLuong +
             "</div>" +
