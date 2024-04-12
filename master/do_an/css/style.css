@@ -4,7 +4,7 @@
   padding: 0;
 }
 
-:root[data-theme='light'] {
+:root[data-theme="light"] {
   /* --primary-color: #f2bed1; */
   --secondary-color: #d6c1d7;
   --accent-color: #7b517b;
@@ -12,7 +12,7 @@
   --text-color: #090609;
 }
 
-:root[data-theme='dark'] {
+:root[data-theme="dark"] {
   --primary-color: #cbe90c;
   --secondary-color: #070227;
   --accent-color: #ff00ff;
@@ -46,7 +46,7 @@ img {
 }
 
 /* div {
-    border: 1px solid red;
+  border: 1px solid red;
 } */
 
 ul {
@@ -63,17 +63,17 @@ nav.navigationbar {
   justify-content: flex-start;
   height: 120px;
   background-image: linear-gradient(to left, #bdbbbe 100%, #9d9ea3 100%),
-    radial-gradient(
-      88% 271%,
-      rgba(255, 255, 255, 0.25) 0%,
-      rgba(254, 254, 254, 0.25) 1%,
-      rgba(0, 0, 0, 0.25) 100%
-    ),
-    radial-gradient(
-      50% 100%,
-      rgba(255, 255, 255, 0.3) 0%,
-      rgba(0, 0, 0, 0.3) 100%
-    );
+      radial-gradient(
+          88% 271%,
+          rgba(255, 255, 255, 0.25) 0%,
+          rgba(254, 254, 254, 0.25) 1%,
+          rgba(0, 0, 0, 0.25) 100%
+      ),
+      radial-gradient(
+          50% 100%,
+          rgba(255, 255, 255, 0.3) 0%,
+          rgba(0, 0, 0, 0.3) 100%
+      );
   background-blend-mode: normal, lighten, soft-light;
 }
 
@@ -154,11 +154,11 @@ nav.navigationbar {
 
 @keyframes left-menu-hover {
   from {
-    padding: 10px;
+      padding: 10px;
   }
 
   to {
-    padding: 20px;
+      padding: 20px;
   }
 }
 
@@ -290,6 +290,37 @@ form.otherSearch :is(input, select) {
   height: 90%;
   width: 100%;
 }
+
+/*test*/
+.dsPhieuNhap {
+  height: 90%;
+  overflow-y: scroll;
+}
+
+.dsPhieuNhap .phieuNhap:first-child {
+  position: sticky;
+  inset: calc(5rem / 16);
+  top: 0;
+  background-color: var(--accent-color);
+  border-top: calc(5rem / 16) solid white;
+  overflow: scroll;
+  min-height: 2rem;
+  font-size: 1.25rem;
+}
+
+.content .dsPhieuNhap .phieuNhap {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  margin: calc(5rem / 16);
+}
+
+.phieuNhap > * {
+  text-align: center;
+  min-width: 100px;
+  border: 1px solid red;
+}
+/* dit me may lam viec vc */
 
 .userList .user {
   display: grid;
@@ -535,96 +566,96 @@ form.otherSearch :is(input, select) {
 }
 @keyframes show-up {
   0% {
-    opacity: 0;
-    translate: -50% -100%;
+      opacity: 0;
+      translate: -50% -100%;
   }
 
   100% {
-    opacity: 1;
+      opacity: 1;
   }
 }
 
 @keyframes show-out {
   0% {
-    opacity: 1;
+      opacity: 1;
   }
 
   100% {
-    opacity: 0;
-    translate: -50% -100%;
+      opacity: 0;
+      translate: -50% -100%;
   }
 }
 
 @media screen and (max-width: 800px) {
   .searchBar form {
-    margin: 0;
-    margin-right: auto;
-    overflow: scroll;
+      margin: 0;
+      margin-right: auto;
+      overflow: scroll;
   }
 
   .searchBar form * {
-    margin: 1px;
+      margin: 1px;
   }
 
   .searchBar form input {
-    font-size: 1rem;
-    width: 100px;
+      font-size: 1rem;
+      width: 100px;
   }
 }
 
 @media screen and (max-width: 900px) {
   .wrapper-flex {
-    flex-direction: column;
-    justify-content: flex-start;
-    height: fit-content;
+      flex-direction: column;
+      justify-content: flex-start;
+      height: fit-content;
   }
 
   #left-menu {
-    width: 100%;
-    display: none;
-    margin: 1rem 0 0 0;
+      width: 100%;
+      display: none;
+      margin: 1rem 0 0 0;
   }
 
   .hamburgerbutton {
-    display: block;
+      display: block;
   }
 
   .content {
-    width: 100%;
-    margin: 1rem 0 0 0;
-    height: calc(60% - 29px);
+      width: 100%;
+      margin: 1rem 0 0 0;
+      height: calc(60% - 29px);
   }
 
   .userList {
-    overflow: scroll;
+      overflow: scroll;
   }
 
   .userList .user:first-child {
-    overflow: auto;
-    height: auto;
-    white-space: nowrap;
+      overflow: auto;
+      height: auto;
+      white-space: nowrap;
   }
 
   #admin-QLSP {
-    margin-top: 1rem;
+      margin-top: 1rem;
   }
 
   #phanTrang {
-    margin-top: 2rem;
-    min-height: fit-content;
+      margin-top: 2rem;
+      min-height: fit-content;
   }
 
   #phanTrang button {
-    height: auto;
+      height: auto;
   }
 
   .donHang:first-child {
-    font-size: 1rem;
+      font-size: 1rem;
   }
 
   .donHang .HanhDong div {
-    font-size: 1rem;
-    margin: 0;
+      font-size: 1rem;
+      margin: 0;
   }
 }
 
