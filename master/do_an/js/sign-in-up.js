@@ -387,7 +387,9 @@ logoutButton.addEventListener('click', (e) => {
   loginLink.style.display = 'initial';
   wrapper.style.display = 'initial';
   logoutButton.style.display = 'none';
+
   adminButton.style.display = 'none';
+  adminButton1.style.display = 'none';
   userInforButton.setAttribute('onclick', 'openOption()');
   if (window.location.pathname === '/master/do_an/html/cart.html') {
     payButton.removeAttribute('onclick');
@@ -423,9 +425,9 @@ function setCurrentUser(
 }
 // setCurrentUser("","","","","","",true);
 loginButton.addEventListener('click', async (e) => {
-  // e.preventDefault();
+  e.preventDefault();
   // var check = false;
-  let currentUser;
+
   let username = accountNameLogin.value;
 
   try {
@@ -443,30 +445,31 @@ loginButton.addEventListener('click', async (e) => {
       throw new Error(data.message);
     }
 
-    currentUser = await response.json();
-    console.log(currentUser);
-    if (currentUser.password == passWordLogin.value) {
-      console.log(currentUser.role);
-      setCurrentUser(
-        currentUser.username,
-        currentUser.accountname,
-        currentUser.password,
-        currentUser.email,
-        currentUser.phone,
-        currentUser.address,
-        currentUser.status,
-        currentUser.role,
-        currentUser.user_id
-      );
-      // onLoginSuccess(JSON.parse(localStorage.getItem('currentUser')));
-      console.log(1);
-      // location.reload();
-      checklogin();
-      accountNameLogin.value = '';
-      passWordLogin.value = '';
-    } else {
-      throw new Error('Mật khẩu không đúng');
-    }
+    await response.json().then((currentUser) => {
+      console.log(currentUser);
+      if (currentUser.password == passWordLogin.value) {
+        console.log(currentUser.role);
+        setCurrentUser(
+          currentUser.username,
+          currentUser.accountname,
+          currentUser.password,
+          currentUser.email,
+          currentUser.phone,
+          currentUser.address,
+          currentUser.status,
+          currentUser.role,
+          currentUser.user_id
+        );
+        // onLoginSuccess(JSON.parse(localStorage.getItem('currentUser')));
+        console.log(1);
+        // location.reload();
+        checklogin();
+        accountNameLogin.value = '';
+        passWordLogin.value = '';
+      } else {
+        throw new Error('Mật khẩu không đúng');
+      }
+    });
   } catch (error) {
     alert(error);
     console.log(error);
