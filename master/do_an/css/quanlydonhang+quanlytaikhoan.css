@@ -1,0 +1,393 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --primary-color: #ffc2ff;
+    --secondary-color: #d6c2ff;
+    --accent-color: #a488b3;
+    --background-color: #ebf1f4;
+    --text-color: #090609;
+}
+
+/* :root[data-theme="dark"] {
+    --primary-color: #cbe90c;
+    --secondary-color: #070227;
+    --accent-color: #ff00ff;
+    --background-color: #2c2e43;
+    --text-color: #f2f0ff;
+} */
+
+*::-webkit-scrollbar {
+    display: none;
+}
+
+html {
+    min-height: 100vh;
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100%;
+}
+
+a {
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+    font-style: italic;
+}
+
+ul {
+    list-style-type: none;
+}
+
+option {
+    border-radius: 0;
+}
+
+.content {
+    width: 100%;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 100vh;
+    background: var(--background-color);
+}
+
+.content > * {
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+.dsDonHang {
+    height: 90%;
+    overflow-y: scroll;
+}
+
+.dsDonHang .donHang:first-child {
+    position: sticky;
+    inset: calc(5rem / 16);
+    top: 0;
+    border-top: calc(5rem / 16) solid var(--background-color);
+    overflow: scroll;
+    min-height: 2rem;
+    font-size: 1.25rem;
+    background-color: var(--primary-color);
+}
+
+.content .dsDonHang .donHang {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 1px;
+    margin: calc(5rem / 16);
+}
+
+.donHang > * {
+    text-align: center;
+    min-width: 100px;
+    border: 1px solid var(--secondary-color);
+}
+
+/*test*/
+.dsPhieuNhap {
+    height: 90%;
+    overflow-y: scroll;
+}
+
+.dsPhieuNhap .phieuNhap:first-child {
+    position: sticky;
+    inset: calc(5rem / 16);
+    top: 0;
+    border-top: calc(5rem / 16) solid var(--background-color);
+    overflow: scroll;
+    min-height: 2rem;
+    font-size: 1.25rem;
+    background-color: var(--primary-color);
+}
+
+.content .dsPhieuNhap .phieuNhap {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 1px;
+    margin: calc(5rem / 16);
+}
+
+.phieuNhap > * {
+    text-align: center;
+    min-width: 100px;
+    border: 1px solid var(--secondary-color);
+}
+
+/* dit me may lam viec vc */
+.donHang .HanhDong {
+    display: flex;
+    flex-shrink: 0;
+}
+
+.donHang .HanhDong:not(:first-child) {
+    justify-content: center;
+    align-items: center;
+}
+
+.donHang .HanhDong div {
+    width: 50%;
+    min-width: fit-content;
+    height: fit-content;
+    margin: calc(10rem / 16);
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-align: center;
+    cursor: pointer;
+    caret-color: transparent;
+}
+
+.donHang .HanhDong div:hover.accept {
+    color: lime;
+}
+.donHang .HanhDong div:hover.in {
+    color: lime;
+}
+
+.donHang .HanhDong div:hover.deny {
+    color: red;
+}
+
+.searchBar {
+    min-height: 10%;
+    display: flex;
+    justify-content: space-around;
+    margin-top: auto;
+    flex-wrap: wrap;
+}
+
+.searchBar > * {
+    margin-bottom: 2rem;
+}
+
+.searchBar form {
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+}
+
+.searchBar form * {
+    margin: 2px;
+}
+
+form.dateSearch input {
+    width: fit-content;
+    min-height: 70%;
+    font-size: 1rem;
+}
+
+form .applySearch {
+    width: 50px;
+    height: 70%;
+}
+
+form.otherSearch :is(input, select) {
+    width: 100px;
+    text-overflow: ellipsis;
+    min-height: 70%;
+}
+
+.userList {
+    height: 90%;
+    overflow: scroll;
+    width: auto;
+}
+
+.userList .user {
+    display: grid;
+    grid-template-columns: calc(50rem / 16) repeat(5, 1fr);
+    gap: 1px;
+    margin: calc(5rem / 16);
+}
+
+.user > * {
+    text-align: center;
+    color: var(--text-color);
+    border: 1px solid var(--secondary-color);
+}
+
+.user > *:not(:first-child) {
+    min-width: 300px;
+    text-wrap: wrap;
+    background-color: red;
+}
+
+.userList .user:first-child {
+    position: sticky;
+    inset: calc(5rem / 16);
+    top: 0;
+    /* background-color: var(--primary-color); */
+    /* border-top: calc(5rem/16) solid var(--background-color); */
+    font-size: 1.25rem;
+    background: red;
+}
+
+.user .hanhDong {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.user .hanhDong .delete {
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+    caret-color: transparent;
+}
+
+.hanhDong .delete:hover {
+    color: red;
+}
+
+.searchBar.flex-start {
+    justify-content: flex-start;
+}
+
+.addAccount {
+    display: flex;
+    align-items: center;
+    margin-right: 2rem;
+    border: 2px solid var(--accent-color);
+    background-color: var(--secondary-color);
+}
+
+.addAccount > * {
+    margin: 2px;
+    font-weight: 900;
+}
+
+.addAccount:hover {
+    background-color: var(--accent-color);
+    color: var(--background-color);
+}
+
+#userSearchType {
+    margin: 0 2px 2rem 1rem;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+#userSearchValue {
+    margin-right: auto;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+#userSearchValue::placeholder {
+    color: white;
+}
+
+#createAccountBox {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: fit-content;
+    padding: 1rem;
+    position: absolute;
+    inset: 50%;
+    translate: -50% -50%;
+    animation: show-up 400ms ease;
+    z-index: 2;
+    background-color: whitesmoke;
+    border-radius: 10px;
+}
+
+#createAccountBox .closeBtn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: red;
+    border-radius: 0 10px 0 10px;
+}
+
+#createAccountBox .btnWrapper {
+    margin-top: 20px;
+    border: 0;
+}
+
+.btnWrapper button {
+    margin: 0 0.5rem;
+    width: 50px;
+    height: 30px;
+}
+
+#createAccountBox input {
+    margin-bottom: 20px;
+}
+
+@keyframes show-up {
+    0% {
+        opacity: 0;
+        translate: -50% -100%;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes show-out {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        translate: -50% -100%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .searchBar form {
+        margin: 0;
+        margin-right: auto;
+        overflow: scroll;
+    }
+
+    .searchBar form * {
+        margin: 1px;
+    }
+
+    .searchBar form input {
+        font-size: 1rem;
+        width: 100px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    #left-menu {
+        display: none;
+    }
+
+    .content {
+        width: 100%;
+        margin: 1rem 0 0 0;
+    }
+
+    .donHang:first-child {
+        font-size: 1rem;
+    }
+
+    .donHang .HanhDong div {
+        font-size: 1rem;
+        margin: 0;
+    }
+}
