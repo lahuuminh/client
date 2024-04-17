@@ -74,87 +74,95 @@ let receiveList = [
   },
 ];
 window.onload = () => {
-  let hamburgerbtn = document.getElementById('hamburger-open');
-  hamburgerbtn.addEventListener('click', () => {
-    let leftMenu = document.getElementById('left-menu');
-    if (window.getComputedStyle(hamburgerbtn).display != 'none') {
-      leftMenu.style.display =
-        window.getComputedStyle(leftMenu).display == 'block' ? 'none' : 'block';
+    let hamburgerbtn = document.getElementById("hamburger-open");
+    hamburgerbtn.addEventListener("click", () => {
+        let leftMenu = document.getElementById("left-menu");
+        if (window.getComputedStyle(hamburgerbtn).display != "none") {
+            leftMenu.style.display =
+                window.getComputedStyle(leftMenu).display == "block"
+                    ? "none"
+                    : "block";
+        }
+    });
+    function checkRole(user, role) {
+        if (role === "nguoiquanly") {
+            if (user.role === "nguoiquanly") {
+                return true;
+            }
+        } else if (role === "nguoiban") {
+            if (user.role === "nguoiquanly" || user.role === "nguoiban") {
+                return true;
+            }
+        } else if (role === "nguoiquanlykho") {
+            if (user.role === "nguoiquanly" || user.role === "nguoiquanlykho") {
+                return true;
+            }
+        }
+        return false;
     }
-  });
-  function checkRole(user, role) {
-    if (role === 'nguoiquanly') {
-      if (user.role === 'nguoiquanly') {
-        return true;
-      }
-    } else if (role === 'nguoiban') {
-      if (user.role === 'nguoiquanly' || user.role === 'nguoiban') {
-        return true;
-      }
-    } else if (role === 'nguoiquanlykho') {
-      if (user.role === 'nguoiquanly' || user.role === 'nguoiquanlykho') {
-        return true;
-      }
-    }
-    return false;
-  }
-  let tkDonHang = document.getElementById('tkDonHang');
-  tkDonHang.addEventListener('click', async () => {
-    await fetchOrderList();
-    displayOrderManagement(orderList);
-    // if (checkRole(user, 'nguoiban')) {
+    let tkDonHang = document.getElementById("tkDonHang");
+    tkDonHang.addEventListener("click", async () => {
+        if (checkRole(user, "nguoiban")) {
+            await fetchOrderList();
+            displayOrderManagement(orderList);
+        } else {
+            alert("Người dùng không có quyền này");
+        }
+    });
 
-    // } else {
-    //   alert('Người dùng không có quyền này');
-    // }
-  });
+    let qlTaiKhoan = document.getElementById("userManagement");
+    qlTaiKhoan.addEventListener("click", () => {
+        if (checkRole(user, "nguoiban")) {
+            displayUserManagement(userList);
+        } else {
+            alert("Người dùng không có quyền này");
+        }
+    });
 
-  let qlTaiKhoan = document.getElementById('userManagement');
-  qlTaiKhoan.addEventListener('click', () => {
-    displayUserManagement(userList);
-    // if (checkRole(user, 'nguoiban')) {
-    //   displayUserManagement(userList);
-    // } else {
-    //   alert('Người dùng không có quyền này');
-    // }
-  });
+    let QLSP = document.getElementById("QLSP");
+    QLSP.addEventListener("click", () => {
+        if (checkRole(user, "nguoiquanlykho")) {
+            displayQLSP(productList);
+        } else {
+            alert("Người dùng không có quyền này");
+        }
+    });
+    let QLNCC = document.getElementById("QLNCC");
+    QLNCC.addEventListener("click", () => {
+        if (checkRole(user, "nguoiquanlykho")) {
+            displayQLNCC(nccList);
+        } else {
+            alert("Người dùng không có quyền này");
+        }
+    });
+    let TKSP = document.getElementById("TKSP");
+    TKSP.addEventListener("click", () => {
+        if (listTKSP === null) listTKSP = [];
+        for (var i = 0; i < productList.length; i++) productList[i].count = 0;
+        for (var i = 0; i < productList.length; i++)
+            for (var j = 0; j < listTKSP.length; j++)
+                if (productList[i].name === listTKSP[j].name)
+                    productList[i].count += listTKSP[j].amount;
+        displayTKSP(productList);
+    });
+    let qlPhieuNhap = document.getElementById("qlPhieuNhap");
+    qlPhieuNhap.addEventListener("click", () => {
+        // if (checkRole(user, "nguoiban")) {
+        displayReceivedNote(receiveList);
+        //     } else {
+        //         alert("Người dùng không có quyền này");
+        // //     }
+    });
 
-  let QLSP = document.getElementById('QLSP');
-  QLSP.addEventListener('click', () => {
-    displayQLSP(productList);
-    // if (checkRole(user, 'nguoiquanlykho')) {
+    let qlThongke = document.getElementById("qlThongke");
+    qlThongke.addEventListener("click", () => {
+        displayTKNote(thongkeList);
+    });
 
-    // } else {
-    //   alert('Người dùng không có quyền này');
-    // }
-  });
-  let QLNCC = document.getElementById('QLNCC');
-  QLNCC.addEventListener('click', () => {
-    displayQLNCC(nccList);
-    // if (checkRole(user, 'nguoiquanlykho')) {
-    //   displayQLNCC(nccList);
-    // } else {
-    //   alert('Người dùng không có quyền này');
-    // }
-  });
-  let TKSP = document.getElementById('TKSP');
-  TKSP.addEventListener('click', () => {
-    if (listTKSP === null) listTKSP = [];
-    for (var i = 0; i < productList.length; i++) productList[i].count = 0;
-    for (var i = 0; i < productList.length; i++)
-      for (var j = 0; j < listTKSP.length; j++)
-        if (productList[i].name === listTKSP[j].name)
-          productList[i].count += listTKSP[j].amount;
-    displayTKSP(productList);
-  });
-  let qlPhieuNhap = document.getElementById('qlPhieuNhap');
-  qlPhieuNhap.addEventListener('click', () => {
-    // if (checkRole(user, "nguoiban")) {
-    displayReceivedNote(receiveList);
-    //     } else {
-    //         alert("Người dùng không có quyền này");
-    // //     }
-  });
+    let qlBaocao = document.getElementById("qlBaocao");
+    qlBaocao.addEventListener("click", () => {
+        displayBCNote(baocaoList);
+    });
 };
 function closeTKNC() {
   var c = document.getElementById('TKNCkhung');
