@@ -10,7 +10,7 @@ let user = JSON.parse(localStorage.getItem('currentUser'));
 async function fetchUser() {
   const response = await fetch(host + '/user/all'); // Thay thế URL bằng URL thực tế của server bạn muốn lấy dữ liệu từ
   userList = await response.json();
-  console.log(userList);
+  console.log(userList)
   userList = userList.filter((u) => {
     return u.role === 'nguoimua';
   });
