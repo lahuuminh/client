@@ -305,17 +305,78 @@ form.otherSearch :is(input, select) {
     border-top: calc(5rem / 16) solid white;
     overflow: scroll;
     min-height: 2rem;
-    font-size: 1.25rem;
+    font-size: 1.25em;
 }
 
 .content .dsPhieuNhap .phieuNhap {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 1px;
+    margin: calc(5rem / 16);
+}
+
+.phieuNhap > * {
+    text-align: center;
+    min-width: 100px;
+    border: 1px solid red;
+}
+/* dit me may lam viec vc */
+
+/*test*/
+.dsthongke {
+    height: 90%;
+    overflow-y: scroll;
+}
+
+.dsthongke .thongke:first-child {
+    position: sticky;
+    inset: calc(5rem / 16);
+    top: 0;
+    background-color: var(--accent-color);
+    border-top: calc(5rem / 16) solid white;
+    overflow: scroll;
+    min-height: 2rem;
+    font-size: 1.25em;
+}
+
+.content .dsthongke .thongke {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    margin: calc(5rem / 16);
+}
+
+.thongke > * {
+    text-align: center;
+    min-width: 100px;
+    border: 1px solid red;
+}
+/* dit me may lam viec vc */
+/*test*/
+.dsbaocao {
+    height: 90%;
+    overflow-y: scroll;
+}
+
+.dsbaocao .baocao:first-child {
+    position: sticky;
+    inset: calc(5rem / 16);
+    top: 0;
+    background-color: var(--accent-color);
+    border-top: calc(5rem / 16) solid white;
+    overflow: scroll;
+    min-height: 2rem;
+    font-size: 1.25em;
+}
+
+.content .dsbaocao .baocao {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 1px;
     margin: calc(5rem / 16);
 }
 
-.phieuNhap > * {
+.baocao > * {
     text-align: center;
     min-width: 100px;
     border: 1px solid red;
@@ -512,6 +573,18 @@ form.otherSearch :is(input, select) {
 }
 
 .addEditQLSP {
+    border: none;
+    width: 180px;
+    justify-content: center;
+    position: absolute;
+    top: calc(50% - 130px);
+    left: calc(50% - 90px);
+    border-radius: 2%;
+    background-color: pink;
+    z-index: 100;
+}
+
+.addEditReceived {
     border: none;
     width: 180px;
     justify-content: center;
