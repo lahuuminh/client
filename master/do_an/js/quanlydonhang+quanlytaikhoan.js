@@ -541,84 +541,84 @@ function loadOrderList(orderElm, orderList) {
   }
 }
 function openaddPN() {
-    var pa = document.getElementsByClassName("addEditReceived")[0];
-    pa.innerHTML = "";
-    var form = document.createElement("div");
-    form.id = "formAddQLSP";
-    form.innerHTML =
-        '<h3 style="text-align: center;">Thêm phieu nhap</h3>' +
-        '<label for="nameSP">Tên sản phẩm</label><br>' +
-        '<input id="nameSP" type="text"><br>' +
-        '<label for="">Cong ty</label><br>' +
-        '<input id="CongTy" type="text"><br>' +
-        '<label for="">So luong</label><br>' +
-        '<input id="SoLuong" type="text"><br>' +
-        '<label for="">Ngay nhap</label><br>' +
-        '<input id="NgayNhap" type="text"><br>' +
-        '<label for="">Loại</label><br>' +
-        `<div style="display: flex;">` +
-        '<input type="radio" name="type" value="1">1<br>' +
-        '<input type="radio" name="type" value="2">2<br>' +
-        '<input type="radio" name="type" value="3">3<br>' +
-        '<input type="radio" name="type" value="4">4<br>' +
-        "</div>" +
-        '<label for="">TongTien</label><br>' +
-        '<input id="pricePN" type="text"><br>' +
-        '<button onclick="addPN()" style="float: right;" >Submit</button>' +
-        '<button onclick="closeAddQLSP()" style="float: right;" >Cancel</button>';
-    pa.appendChild(form);
-
+  var pa = document.getElementsByClassName('addEditReceived')[0];
+  pa.innerHTML = '';
+  var form = document.createElement('div');
+  form.id = 'formAddQLSP';
+  form.innerHTML =
+    '<h3 style="text-align: center;">Thêm phieu nhap</h3>' +
+    '<label for="nameSP">Tên sản phẩm</label><br>' +
+    '<input id="nameSP" type="text"><br>' +
+    '<label for="">Cong ty</label><br>' +
+    '<input id="CongTy" type="text"><br>' +
+    '<label for="">So luong</label><br>' +
+    '<input id="SoLuong" type="text"><br>' +
+    '<label for="">Ngay nhap</label><br>' +
+    '<input id="NgayNhap" type="text"><br>' +
+    '<label for="">Loại</label><br>' +
+    `<div style="display: flex;">` +
+    '<input type="radio" name="type" value="1">1<br>' +
+    '<input type="radio" name="type" value="2">2<br>' +
+    '<input type="radio" name="type" value="3">3<br>' +
+    '<input type="radio" name="type" value="4">4<br>' +
+    '</div>' +
+    '<label for="">TongTien</label><br>' +
+    '<input id="pricePN" type="text"><br>' +
+    '<button onclick="addPN()" style="float: right;" >Submit</button>' +
+    '<button onclick="closeAddQLSP()" style="float: right;" >Cancel</button>';
+  pa.appendChild(form);
+}
 function displayReceivedNote(receiveList) {
-    content.innerHTML =
-        '<div class="addEditReceived">' +
-        "</div>" +
-        '<ul id="dsPhieuNhap" class="dsPhieuNhap">' +
-        '<li class="phieuNhap">' +
-        '<div class="STT">STT</div>' +
-        '<div class="MaPhieuNhap">Mã Phieu Nhap</div>' +
-        '<div class="CongTy">Cong ty</div>' +
-        '<div class="SanPham">Sản phẩm</div>' +
-        '<div class="Loai">Loai</div>' +
-        '<div class="SoLuong">So luong</div>' +
-        '<div class="NgayNhap">Ngày Nhap</div>' +
-        '<div class="TongCong">Tong cong</div>' +
-        "</li>" +
-        "</ul>" +
-        '<div class="searchBar">' +
-        '<form action="" id="dateSearch" class="dateSearch">' +
-        '<label for="fromDate">Từ cuối ngày</label>' +
-        '<input type="date" name="ngayXaNhat" id="fromDate"' +
-        '<label for="toDate">Đến cuối ngày</label>' +
-        '<input type="date" name="ngayXaNhat" id="toDate">' +
-        '<button class="applySearch" id="dateSearchBtn">Search</button>' +
-        '<a href="#" id="addRecieveNote" style="padding-left:20px" onclick="openaddPN()">+THEM SAN PHAM</a>';
-    "</form>" +
-        // '<form action="" id="otherSearch" class="otherSearch">' +
-        // '<select name="searchyype" id="searchType">' +
-        // '<option value="1">Tìm theo mã đơn</option>' +
-        // '<option value="2">Tìm theo tên khách hàng</option>' +
-        // '<option value="3">Tim theo trạng thái</option>' +
-        // '</select>' +
-        // '<input type="text" id="inputValue">' +
-        // '<button class="applySearch" id="typeSearchBtn">Search</button>' +
-        // '</form>' +
-        "</div>" +
-        "</div>";
-    let searchBtn = document.getElementsByClassName("applySearch");
-    let receiveElm = document.getElementById("dsPhieuNhap");
-    console.log(receiveElm);
-    loadReceivedList(receiveElm, receiveList);
+  content.innerHTML =
+    '<div class="addEditReceived">' +
+    '</div>' +
+    '<ul id="dsPhieuNhap" class="dsPhieuNhap">' +
+    '<li class="phieuNhap">' +
+    '<div class="STT">STT</div>' +
+    '<div class="MaPhieuNhap">Mã Phieu Nhap</div>' +
+    '<div class="CongTy">Cong ty</div>' +
+    '<div class="SanPham">Sản phẩm</div>' +
+    '<div class="Loai">Loai</div>' +
+    '<div class="SoLuong">So luong</div>' +
+    '<div class="NgayNhap">Ngày Nhap</div>' +
+    '<div class="TongCong">Tong cong</div>' +
+    '</li>' +
+    '</ul>' +
+    '<div class="searchBar">' +
+    '<form action="" id="dateSearch" class="dateSearch">' +
+    '<label for="fromDate">Từ cuối ngày</label>' +
+    '<input type="date" name="ngayXaNhat" id="fromDate"' +
+    '<label for="toDate">Đến cuối ngày</label>' +
+    '<input type="date" name="ngayXaNhat" id="toDate">' +
+    '<button class="applySearch" id="dateSearchBtn">Search</button>' +
+    '<a href="#" id="addRecieveNote" style="padding-left:20px" onclick="openaddPN()">+THEM SAN PHAM</a>';
+  '</form>' +
+    // '<form action="" id="otherSearch" class="otherSearch">' +
+    // '<select name="searchyype" id="searchType">' +
+    // '<option value="1">Tìm theo mã đơn</option>' +
+    // '<option value="2">Tìm theo tên khách hàng</option>' +
+    // '<option value="3">Tim theo trạng thái</option>' +
+    // '</select>' +
+    // '<input type="text" id="inputValue">' +
+    // '<button class="applySearch" id="typeSearchBtn">Search</button>' +
+    // '</form>' +
+    '</div>' +
+    '</div>';
+  let searchBtn = document.getElementsByClassName('applySearch');
+  let receiveElm = document.getElementById('dsPhieuNhap');
+  console.log(receiveElm);
+  loadReceivedList(receiveElm, receiveList);
 
-    searchBtn[0].addEventListener("click", (e) => {
-        e.preventDefault();
-        let list = [];
-        list = conditionSearch("Date", receiveList);
-        console.log(receiveElm.children.length);
-        // if (i === 1) list = conditionSearch('Value');
-        // if (list.length == 0)
-        //   loadOrderList(orderElm, JSON.parse(localStorage.getItem('orderList')));
-        loadReceivedList(receiveElm, list);
-    });
+  searchBtn[0].addEventListener('click', (e) => {
+    e.preventDefault();
+    let list = [];
+    list = conditionSearch('Date', receiveList);
+    console.log(receiveElm.children.length);
+    // if (i === 1) list = conditionSearch('Value');
+    // if (list.length == 0)
+    //   loadOrderList(orderElm, JSON.parse(localStorage.getItem('orderList')));
+    loadReceivedList(receiveElm, list);
+  });
 }
 
 function loadReceivedList(receiveElm, receiveList) {
@@ -655,162 +655,162 @@ function loadReceivedList(receiveElm, receiveList) {
   }
 }
 function displayTKNote(thongkeList) {
-    content.innerHTML =
-        '<ul id="dsthongke" class="dsthongke">' +
-        '<li class="thongke">' +
-        '<div class="sothutu">STT</div>' +
-        '<div class="mahanghoa">Ma hang hoa</div>' +
-        '<div class="congty">Cong ty</div>' +
-        '<div class="sanpham">Sản phẩm</div>' +
-        '<div class="soluong">So luong</div>' +
-        '<div class="ngaynhap">Ngày Nhap</div>' +
-        '<div class="tongcong">Tong cong</div>' +
-        "</li>" +
-        "</ul>" +
-        '<div class="searchBar">' +
-        '<form action="" id="dateSearch" class="dateSearch">' +
-        '<label for="fromDate">Từ cuối ngày</label>' +
-        '<input type="date" name="ngayXaNhat" id="fromDate"' +
-        '<label for="toDate">Đến cuối ngày</label>' +
-        '<input type="date" name="ngayXaNhat" id="toDate">' +
-        '<button class="applySearch" id="dateSearchBtn">Search</button>' +
-        // "</form>" +
-        // '<form action="" id="otherSearch" class="otherSearch">' +
-        // '<select name="searchyype" id="searchType">' +
-        // '<option value="1">Tìm theo mã đơn</option>' +
-        // '<option value="2">Tìm theo tên khách hàng</option>' +
-        // '<option value="3">Tim theo trạng thái</option>' +
-        // '</select>' +
-        // '<input type="text" id="inputValue">' +
-        // '<button class="applySearch" id="typeSearchBtn">Search</button>' +
-        // '</form>' +
-        "</div>" +
-        "</div>";
-    let searchBtn = document.getElementsByClassName("applySearch");
-    let TKElm = document.getElementById("dsthongke");
-    console.log(TKElm);
-    loadTKList(TKElm, thongkeList);
+  content.innerHTML =
+    '<ul id="dsthongke" class="dsthongke">' +
+    '<li class="thongke">' +
+    '<div class="sothutu">STT</div>' +
+    '<div class="mahanghoa">Ma hang hoa</div>' +
+    '<div class="congty">Cong ty</div>' +
+    '<div class="sanpham">Sản phẩm</div>' +
+    '<div class="soluong">So luong</div>' +
+    '<div class="ngaynhap">Ngày Nhap</div>' +
+    '<div class="tongcong">Tong cong</div>' +
+    '</li>' +
+    '</ul>' +
+    '<div class="searchBar">' +
+    '<form action="" id="dateSearch" class="dateSearch">' +
+    '<label for="fromDate">Từ cuối ngày</label>' +
+    '<input type="date" name="ngayXaNhat" id="fromDate"' +
+    '<label for="toDate">Đến cuối ngày</label>' +
+    '<input type="date" name="ngayXaNhat" id="toDate">' +
+    '<button class="applySearch" id="dateSearchBtn">Search</button>' +
+    // "</form>" +
+    // '<form action="" id="otherSearch" class="otherSearch">' +
+    // '<select name="searchyype" id="searchType">' +
+    // '<option value="1">Tìm theo mã đơn</option>' +
+    // '<option value="2">Tìm theo tên khách hàng</option>' +
+    // '<option value="3">Tim theo trạng thái</option>' +
+    // '</select>' +
+    // '<input type="text" id="inputValue">' +
+    // '<button class="applySearch" id="typeSearchBtn">Search</button>' +
+    // '</form>' +
+    '</div>' +
+    '</div>';
+  let searchBtn = document.getElementsByClassName('applySearch');
+  let TKElm = document.getElementById('dsthongke');
+  console.log(TKElm);
+  loadTKList(TKElm, thongkeList);
 
-    searchBtn[0].addEventListener("click", (e) => {
-        e.preventDefault();
-        let list = [];
-        list = conditionSearch("Date", thongkeList);
-        console.log(TKElm.children.length);
-        // if (i === 1) list = conditionSearch('Value');
-        // if (list.length == 0)
-        //   loadOrderList(orderElm, JSON.parse(localStorage.getItem('orderList')));
-        loadTKList(TKElm, list);
-    });
+  searchBtn[0].addEventListener('click', (e) => {
+    e.preventDefault();
+    let list = [];
+    list = conditionSearch('Date', thongkeList);
+    console.log(TKElm.children.length);
+    // if (i === 1) list = conditionSearch('Value');
+    // if (list.length == 0)
+    //   loadOrderList(orderElm, JSON.parse(localStorage.getItem('orderList')));
+    loadTKList(TKElm, list);
+  });
 }
 function loadTKList(TKElm, TKList) {
-    let TKChild = TKElm.childNodes;
-    for (let i = TKChild.length - 1; i > 0; i--) {
-        TKChild[i].parentNode.removeChild(TKChild[i]);
-    }
+  let TKChild = TKElm.childNodes;
+  for (let i = TKChild.length - 1; i > 0; i--) {
+    TKChild[i].parentNode.removeChild(TKChild[i]);
+  }
 
-    for (let i = 0; i < TKList.length; ++i) {
-        let li = document.createElement("li");
-        li.setAttribute("class", "thongke");
-        li.innerHTML =
-            '<div class="STT">' +
-            i +
-            "</div>" +
-            '<div class="mahanghoa">' +
-            thongkeList[i].mahanghoa +
-            "</div>" +
-            '<div class="congty">' +
-            thongkeList[i].congty +
-            "</div>" +
-            '<div class="sanpham">' +
-            thongkeList[i].sanpham +
-            "</div>" +
-            '<div class="soluong">' +
-            thongkeList[i].soluong +
-            "</div>" +
-            '<div class="Ngaygio">' +
-            thongkeList[i].ngaynhap +
-            "</div>" +
-            '<div class="tongcong">' +
-            thongkeList[i].tongcong;
-        TKElm.appendChild(li);
-    }
+  for (let i = 0; i < TKList.length; ++i) {
+    let li = document.createElement('li');
+    li.setAttribute('class', 'thongke');
+    li.innerHTML =
+      '<div class="STT">' +
+      i +
+      '</div>' +
+      '<div class="mahanghoa">' +
+      thongkeList[i].mahanghoa +
+      '</div>' +
+      '<div class="congty">' +
+      thongkeList[i].congty +
+      '</div>' +
+      '<div class="sanpham">' +
+      thongkeList[i].sanpham +
+      '</div>' +
+      '<div class="soluong">' +
+      thongkeList[i].soluong +
+      '</div>' +
+      '<div class="Ngaygio">' +
+      thongkeList[i].ngaynhap +
+      '</div>' +
+      '<div class="tongcong">' +
+      thongkeList[i].tongcong;
+    TKElm.appendChild(li);
+  }
 }
 function displayBCNote(baocaoList) {
-    content.innerHTML =
-        '<ul id="dsbaocao" class="dsbaocao">' +
-        '<li class="baocao">' +
-        '<div class="Sothutu">STT</div>' +
-        '<div class="madonhang">Ma don hang</div>' +
-        '<div class="Sanpham">san pham</div>' +
-        '<div class="Ngayban">Ngay ban</div>' +
-        '<div class="Soluong">So luong</div>' +
-        '<div class="Tongcong">Tong cong</div>' +
-        "</li>" +
-        "</ul>" +
-        '<div class="searchBar">' +
-        '<form action="" id="dateSearch" class="dateSearch">' +
-        '<label for="fromDate">Từ cuối ngày</label>' +
-        '<input type="date" name="ngayXaNhat" id="fromDate"' +
-        '<label for="toDate">Đến cuối ngày</label>' +
-        '<input type="date" name="ngayXaNhat" id="toDate">' +
-        '<button class="applySearch" id="dateSearchBtn">Search</button>' +
-        // "</form>" +
-        // '<form action="" id="otherSearch" class="otherSearch">' +
-        // '<select name="searchyype" id="searchType">' +
-        // '<option value="1">Tìm theo mã đơn</option>' +
-        // '<option value="2">Tìm theo tên khách hàng</option>' +
-        // '<option value="3">Tim theo trạng thái</option>' +
-        // '</select>' +
-        // '<input type="text" id="inputValue">' +
-        // '<button class="applySearch" id="typeSearchBtn">Search</button>' +
-        // '</form>' +
-        "</div>" +
-        "</div>";
-    let searchBtn = document.getElementsByClassName("applySearch");
-    let BCElm = document.getElementById("dsbaocao");
-    console.log(BCElm);
-    loadBCList(BCElm, baocaoList);
+  content.innerHTML =
+    '<ul id="dsbaocao" class="dsbaocao">' +
+    '<li class="baocao">' +
+    '<div class="Sothutu">STT</div>' +
+    '<div class="madonhang">Ma don hang</div>' +
+    '<div class="Sanpham">san pham</div>' +
+    '<div class="Ngayban">Ngay ban</div>' +
+    '<div class="Soluong">So luong</div>' +
+    '<div class="Tongcong">Tong cong</div>' +
+    '</li>' +
+    '</ul>' +
+    '<div class="searchBar">' +
+    '<form action="" id="dateSearch" class="dateSearch">' +
+    '<label for="fromDate">Từ cuối ngày</label>' +
+    '<input type="date" name="ngayXaNhat" id="fromDate"' +
+    '<label for="toDate">Đến cuối ngày</label>' +
+    '<input type="date" name="ngayXaNhat" id="toDate">' +
+    '<button class="applySearch" id="dateSearchBtn">Search</button>' +
+    // "</form>" +
+    // '<form action="" id="otherSearch" class="otherSearch">' +
+    // '<select name="searchyype" id="searchType">' +
+    // '<option value="1">Tìm theo mã đơn</option>' +
+    // '<option value="2">Tìm theo tên khách hàng</option>' +
+    // '<option value="3">Tim theo trạng thái</option>' +
+    // '</select>' +
+    // '<input type="text" id="inputValue">' +
+    // '<button class="applySearch" id="typeSearchBtn">Search</button>' +
+    // '</form>' +
+    '</div>' +
+    '</div>';
+  let searchBtn = document.getElementsByClassName('applySearch');
+  let BCElm = document.getElementById('dsbaocao');
+  console.log(BCElm);
+  loadBCList(BCElm, baocaoList);
 
-    searchBtn[0].addEventListener("click", (e) => {
-        e.preventDefault();
-        let list = [];
-        list = conditionSearch("Date", baocaoList);
-        console.log(BCElm.children.length);
-        // if (i === 1) list = conditionSearch('Value');
-        // if (list.length == 0)
-        //   loadOrderList(orderElm, JSON.parse(localStorage.getItem('orderList')));
-        loadBCList(BCElm, list);
-    });
+  searchBtn[0].addEventListener('click', (e) => {
+    e.preventDefault();
+    let list = [];
+    list = conditionSearch('Date', baocaoList);
+    console.log(BCElm.children.length);
+    // if (i === 1) list = conditionSearch('Value');
+    // if (list.length == 0)
+    //   loadOrderList(orderElm, JSON.parse(localStorage.getItem('orderList')));
+    loadBCList(BCElm, list);
+  });
 }
 function loadBCList(BCElm, baocaoList) {
-    let BCChild = BCElm.childNodes;
-    for (let i = BCChild.length - 1; i > 0; i--) {
-        BCChild[i].parentNode.removeChild(BCChild[i]);
-    }
+  let BCChild = BCElm.childNodes;
+  for (let i = BCChild.length - 1; i > 0; i--) {
+    BCChild[i].parentNode.removeChild(BCChild[i]);
+  }
 
-    for (let i = 0; i < baocaoList.length; ++i) {
-        let li = document.createElement("li");
-        li.setAttribute("class", "baocao");
-        li.innerHTML =
-            '<div class="STT">' +
-            i +
-            "</div>" +
-            '<div class="madonhang">' +
-            thongkeList[i].mahanghoa +
-            "</div>" +
-            '<div class="Sanpham">' +
-            thongkeList[i].sanpham +
-            "</div>" +
-            '<div class="Soluong">' +
-            thongkeList[i].soluong +
-            "</div>" +
-            '<div class="Ngaynhap">' +
-            thongkeList[i].ngaynhap +
-            "</div>" +
-            '<div class="Tongcong">' +
-            thongkeList[i].tongcong;
-        BCElm.appendChild(li);
-    }
+  for (let i = 0; i < baocaoList.length; ++i) {
+    let li = document.createElement('li');
+    li.setAttribute('class', 'baocao');
+    li.innerHTML =
+      '<div class="STT">' +
+      i +
+      '</div>' +
+      '<div class="madonhang">' +
+      thongkeList[i].mahanghoa +
+      '</div>' +
+      '<div class="Sanpham">' +
+      thongkeList[i].sanpham +
+      '</div>' +
+      '<div class="Soluong">' +
+      thongkeList[i].soluong +
+      '</div>' +
+      '<div class="Ngaynhap">' +
+      thongkeList[i].ngaynhap +
+      '</div>' +
+      '<div class="Tongcong">' +
+      thongkeList[i].tongcong;
+    BCElm.appendChild(li);
+  }
 }
 function setOrderStatus(Ma, status) {
   let res = orderList.find((item) => item.maDon == Ma);
@@ -1776,31 +1776,31 @@ function init(product) {
   closeAddQLSP();
 }
 function addPN() {
-    let name = document.getElementById("nameSP").value;
-    let congty = document.getElementById("CongTy").value;
-    let soluong = document.getElementById("SoLuong").value;
-    let ngaynhap = document.getElementById("NgayNhap").value;
-    let loai = document.getElementsByName("type");
-    let price = document.getElementById("pricePN").value;
-    var type;
-    for (var i = 0; i < loai.length; i++)
-        if (loai[i].checked) {
-            type = loai[i].value;
-        }
-    type = type == "" ? "" : type;
+  let name = document.getElementById('nameSP').value;
+  let congty = document.getElementById('CongTy').value;
+  let soluong = document.getElementById('SoLuong').value;
+  let ngaynhap = document.getElementById('NgayNhap').value;
+  let loai = document.getElementsByName('type');
+  let price = document.getElementById('pricePN').value;
+  var type;
+  for (var i = 0; i < loai.length; i++)
+    if (loai[i].checked) {
+      type = loai[i].value;
+    }
+  type = type == '' ? '' : type;
 
-    let newPN = {
-        MaPhieuNhap: Math.floor(Math.random() * 999999 + 1),
-        CongTy: congty,
-        SanPham: name,
-        Loai: type,
-        SoLuong: soluong,
-        NgayNhap: ngaynhap,
-        TongCong: price,
-    };
-    console.log(newPN);
-    receiveList.push(newPN);
-    displayReceivedNote(receiveList);
+  let newPN = {
+    MaPhieuNhap: Math.floor(Math.random() * 999999 + 1),
+    CongTy: congty,
+    SanPham: name,
+    Loai: type,
+    SoLuong: soluong,
+    NgayNhap: ngaynhap,
+    TongCong: price,
+  };
+  console.log(newPN);
+  receiveList.push(newPN);
+  displayReceivedNote(receiveList);
 }
 async function addQLSP() {
   var product = {};
