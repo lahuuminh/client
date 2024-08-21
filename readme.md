@@ -1,5 +1,5 @@
-Hướng sử dụng: vào thư mục /master/do_an/html/HTSP.html
-
+- Hướng sử dụng: vào thư mục /master/do_an/html/HTSP.html
+- Các chức năng :
 - Đăng kí,đăng nhập
 - Xem được thông tin hàng hoá, số lượng.
 - Tìm kiếm dữ liệu hàng hoá.
