@@ -1,5 +1,5 @@
 - Hướng sử dụng: vào thư mục /master/do_an/html/HTSP.html
-Các tài khoản:
+- Các tài khoản:
 tk:lahuuminh, mk:12345678(admin)
 tk:lachikim, mk:12345678(người quản lý)
 - Các chức năng :
