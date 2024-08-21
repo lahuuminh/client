@@ -1,4 +1,7 @@
 - Hướng sử dụng: vào thư mục /master/do_an/html/HTSP.html
+Các tài khoản
+tk:lahuuminh,mk:12345678(admin)
+tk:lachikim,mk:12345678(người quản lý)
 - Các chức năng :
 - Đăng kí,đăng nhập
 - Xem được thông tin hàng hoá, số lượng.
@@ -15,4 +18,5 @@ phải giảm.
 - Thêm, sửa, xoá nhà cung cấp.
 - Tìm kiếm, sắp xếp theo sản phẩm, theo nhà cung cấp.
 - Lập phiếu nhập kho, nhập hàng vào doanh nghiệp
+- Quản lý người dùng (amin) 
 - Phân quyền người dùng: người mua hàng,người bán hàng ,người quản lý kho,người quản lý (có tất cả quyền )
