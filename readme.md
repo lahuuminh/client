@@ -1,7 +1,7 @@
 - Hướng sử dụng: vào thư mục /master/do_an/html/HTSP.html
 - Các tài khoản:
-tk:lahuuminh, mk:12345678(admin)
-tk:lachikim, mk:12345678(người quản lý)
+tk:admin, mk:12345678(admin)
+tk:nguoiquanly, mk:12345678(người quản lý)
 - Các chức năng :
 - Đăng kí,đăng nhập
 - Xem được thông tin hàng hoá, số lượng.
